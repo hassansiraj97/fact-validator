@@ -1,0 +1,248 @@
+{
+  "unina.it": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112790
+  },
+  "ourworldindata.org": {
+    "score": 70,
+    "label": "MEDIUM",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+20)."
+    },
+    "ts": 1767828442
+  },
+  "un.org": {
+    "score": 80,
+    "label": "HIGH",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+30)."
+    },
+    "ts": 1767828442
+  },
+  "epa.gov": {
+    "score": 85,
+    "label": "HIGH",
+    "reasons": {
+      "tld": "Government/Education domain suffix is a strong trust signal."
+    },
+    "ts": 1767828442
+  },
+  "nrdc.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112821
+  },
+  "science.org": {
+    "score": 75,
+    "label": "MEDIUM",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+25)."
+    },
+    "ts": 1766112822
+  },
+  "freethink.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112822
+  },
+  "phys.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112822
+  },
+  "sciencedirect.com": {
+    "score": 65,
+    "label": "MEDIUM",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+15)."
+    },
+    "ts": 1766112824
+  },
+  "climateforesight.eu": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112824
+  },
+  "irena.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112825
+  },
+  "earthday.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112825
+  },
+  "weforum.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112826
+  },
+  "energytracker.asia": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112826
+  },
+  "ipcc.ch": {
+    "score": 80,
+    "label": "HIGH",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+30)."
+    },
+    "ts": 1766112828
+  },
+  "unep.org": {
+    "score": 70,
+    "label": "MEDIUM",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+20)."
+    },
+    "ts": 1766112828
+  },
+  "pik-potsdam.de": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112828
+  },
+  "theguardian.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112828
+  },
+  "cambridge.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112831
+  },
+  "ipcc-data.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112831
+  },
+  "geomar.de": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766112831
+  },
+  "researchgate.net": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1766113519
+  },
+  "wikipedia.org": {
+    "score": 65,
+    "label": "MEDIUM",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+15)."
+    },
+    "ts": 1767830126
+  },
+  "nytimes.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1767830125
+  },
+  "bbc.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1767830125
+  },
+  "time.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1767830125
+  },
+  "springer.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1767830129
+  },
+  "youtube.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768515381
+  },
+  "albaniandailynews.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768516666
+  },
+  "yahoo.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768516666
+  },
+  "aol.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768516673
+  },
+  "michaelbociurkiw.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768516732
+  },
+  "facebook.com": {
+    "score": 30,
+    "label": "LOW",
+    "reasons": {
+      "platform_risk": "Social platform: high repost/misinformation risk (-20)."
+    },
+    "ts": 1768520218
+  },
+  "thehill.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768521293
+  },
+  "nbcnews.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768521294
+  },
+  "pbs.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768521294
+  },
+  "usatoday.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768521294
+  },
+  "economictimes.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768521297
+  }
+}

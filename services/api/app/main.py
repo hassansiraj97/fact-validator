@@ -1,48 +1,77 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Optional, List, Literal, Dict, Any, Tuple
 from datetime import datetime
 from urllib.parse import urlparse
 import os
 import re
+import json
 
 import httpx
 import trafilatura
-import nltk
-from nltk.tokenize import sent_tokenize
-
 from dotenv import load_dotenv
 import tldextract
 
-# --- Step 5 DB ---
-from sqlmodel import select
-from app.db.database import init_db, get_session
-from app.db.models import Run
+import nltk
+from nltk.tokenize import sent_tokenize
 
-# Load env from services/api/.env
+from app.credibility import score_domain_rubric
+from app.storage import save_run, list_runs, get_run, export_runs
+
+# Load environment variables early
 load_dotenv()
 SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY", "").strip()
 
-app = FastAPI(title="Fact Validator API", version="0.5.0")
+
+def _ensure_nltk():
+    try:
+        nltk.data.find("tokenizers/punkt")
+    except Exception:
+        try:
+            nltk.download("punkt", quiet=True)
+        except Exception:
+            pass
+
+    try:
+        nltk.data.find("tokenizers/punkt_tab/english.pickle")
+    except Exception:
+        try:
+            nltk.download("punkt_tab", quiet=True)
+        except Exception:
+            pass
+
+
+_ensure_nltk()
+
+app = FastAPI(title="Fact Validator API", version="0.8.1")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-def _startup():
-    init_db()
 
+# ----------------------------
+# Models
+# ----------------------------
 
 class AnalyzeRequest(BaseModel):
     url: Optional[str] = None
     text: Optional[str] = None
     mode: Literal["live", "snapshot"] = "live"
+    verifier: Literal["baseline", "debate"] = "baseline"  # debate is skipped for now
+    max_debate_claims: int = 2
+
     max_claims: int = 6
     max_evidence_per_claim: int = 5
 
@@ -53,6 +82,7 @@ class EvidenceItem(BaseModel):
     snippet: str
     domain: str
     domain_score: int
+    overlap: int = 0
 
 
 class ClaimResult(BaseModel):
@@ -68,7 +98,6 @@ class AnalyzeResponse(BaseModel):
     domain: Optional[str] = None
     extracted_text_chars: int
     extracted_text_preview: str
-
     domain_score: int
     domain_label: Literal["HIGH", "MEDIUM", "LOW"]
     final_misinformation_likelihood: float
@@ -76,6 +105,10 @@ class AnalyzeResponse(BaseModel):
     timestamp_utc: str
     metadata: Dict[str, Any]
 
+
+# ----------------------------
+# Helpers
+# ----------------------------
 
 def normalize_url(u: str) -> str:
     u = (u or "").strip()
@@ -107,48 +140,8 @@ def domain_from_any_url(url: str) -> str:
 def base_domain(domain: str) -> str:
     ext = tldextract.extract(domain or "")
     if not ext.domain or not ext.suffix:
-        return domain or ""
-    return f"{ext.domain}.{ext.suffix}"
-
-
-def score_domain(domain: str) -> int:
-    d = (domain or "").lower().strip()
-    bd = base_domain(d)
-
-    high_suffix = (bd.endswith(".gov") or bd.endswith(".edu"))
-    high_known = bd in {
-        "who.int",
-        "nih.gov",
-        "cdc.gov",
-        "nasa.gov",
-        "europa.eu",
-        "un.org",
-        "oecd.org",
-        "worldbank.org",
-        "wikipedia.org",
-        "britannica.com",
-        "ourworldindata.org",
-        "epa.gov",
-    }
-
-    low_markers = [
-        "blogspot.", "wordpress.", "medium.com", "substack.com",
-        "rumor", "hoax", "clickbait", "conspiracy"
-    ]
-
-    if high_suffix or high_known:
-        return 90
-    if any(m in d for m in low_markers):
-        return 35
-    return 65
-
-
-def label_from_score(score: int) -> Literal["HIGH", "MEDIUM", "LOW"]:
-    if score >= 80:
-        return "HIGH"
-    if score >= 50:
-        return "MEDIUM"
-    return "LOW"
+        return (domain or "").lower()
+    return f"{ext.domain}.{ext.suffix}".lower()
 
 
 def is_blocked_domain(domain: str) -> bool:
@@ -164,11 +157,16 @@ def is_blocked_domain(domain: str) -> bool:
 async def fetch_html(url: str) -> Tuple[str, str]:
     try:
         headers = {
-            "User-Agent": "FactValidatorBot/0.5.0 (thesis demo)",
+            "User-Agent": "FactValidatorBot/0.8.1 (thesis demo)",
             "Accept": "text/html,application/xhtml+xml",
         }
-        timeout = httpx.Timeout(20.0, connect=10.0)
-        async with httpx.AsyncClient(headers=headers, follow_redirects=True, timeout=timeout) as client:
+        timeout = httpx.Timeout(connect=20.0, read=30.0, write=20.0, pool=30.0)
+        async with httpx.AsyncClient(
+            headers=headers,
+            follow_redirects=True,
+            timeout=timeout,
+            trust_env=False,
+        ) as client:
             r = await client.get(url)
             if r.status_code >= 400:
                 return "", ""
@@ -179,14 +177,14 @@ async def fetch_html(url: str) -> Tuple[str, str]:
 
 def extract_readable_text_from_html(html: str, url: str = "") -> str:
     try:
-        downloaded = trafilatura.extract(
+        extracted = trafilatura.extract(
             html,
             url=url or None,
             include_comments=False,
             include_tables=False,
             favor_recall=True,
         )
-        return (downloaded or "").strip()
+        return (extracted or "").strip()
     except Exception:
         return ""
 
@@ -246,17 +244,14 @@ def extract_claim_candidates(text: str, max_claims: int = 6) -> List[str]:
             s2 = " ".join(s.split()).strip()
             if len(s2) < 60 or len(s2) > 280:
                 continue
-
             low = s2.lower()
             if any(m in low for m in boilerplate_markers):
                 continue
-
             key = s2.lower()
             if key in seen:
                 continue
             seen.add(key)
             candidates.append(s2)
-
             if len(candidates) >= 120:
                 break
         if len(candidates) >= 120:
@@ -281,13 +276,12 @@ async def serpapi_search(query: str, num: int = 5) -> List[Dict[str, Any]]:
     }
 
     try:
-        timeout = httpx.Timeout(25.0, connect=10.0)
-        async with httpx.AsyncClient(timeout=timeout) as client:
+        timeout = httpx.Timeout(connect=20.0, read=45.0, write=20.0, pool=45.0)
+        async with httpx.AsyncClient(timeout=timeout, trust_env=False) as client:
             r = await client.get("https://serpapi.com/search", params=params)
             r.raise_for_status()
             data = r.json()
             organic = data.get("organic_results", []) or []
-
             out = []
             for item in organic[:num]:
                 out.append(
@@ -314,7 +308,17 @@ def tokenize_for_overlap(s: str) -> List[str]:
     return toks[:80]
 
 
-def baseline_verdict(claim: str, evidence: List[EvidenceItem]) -> Tuple[Literal["SUPPORTED", "REFUTED", "NEI"], float, str]:
+def compute_overlap(claim: str, snippet: str) -> int:
+    claim_toks = set(tokenize_for_overlap(claim))
+    if not claim_toks:
+        return 0
+    snip_toks = set(tokenize_for_overlap(snippet))
+    return len(claim_toks.intersection(snip_toks))
+
+
+def baseline_verdict(
+    claim: str, evidence: List[EvidenceItem]
+) -> Tuple[Literal["SUPPORTED", "REFUTED", "NEI"], float, str]:
     if not evidence:
         return "NEI", 0.55, "No evidence retrieved."
 
@@ -324,7 +328,6 @@ def baseline_verdict(claim: str, evidence: List[EvidenceItem]) -> Tuple[Literal[
 
     neg_cues = ["false", "hoax", "debunk", "misleading", "not true", "no evidence", "incorrect"]
     overlaps = []
-
     for e in evidence:
         ev_toks = set(tokenize_for_overlap(e.snippet))
         overlap = len(claim_toks.intersection(ev_toks))
@@ -357,39 +360,51 @@ def estimate_misinformation_likelihood(claims: List[ClaimResult]) -> float:
     return float(max(0.05, min(score, 0.95)))
 
 
+# ----------------------------
+# Routes
+# ----------------------------
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
 
-# --- Step 5 endpoints: history ---
+# Step 9: Source credibility endpoint
+@app.get("/source/{domain}")
+def source_report(domain: str):
+    d = (domain or "").strip().lower()
+    rep = score_domain_rubric(d)
+    return {
+        "domain": d,
+        "base_domain": base_domain(d) if d else d,
+        "score": rep.score,
+        "label": rep.label,
+        "reasons": rep.reasons,
+        "timestamp_utc": datetime.utcnow().isoformat() + "Z",
+        "disclaimer": "Credibility score is heuristic and should be interpreted as a risk signal, not ground truth.",
+    }
+
+
 @app.get("/runs")
-def list_runs(limit: int = 20):
-    with get_session() as session:
-        rows = session.exec(select(Run).order_by(Run.id.desc()).limit(limit)).all()
-        return [
-            {
-                "id": r.id,
-                "created_utc": r.created_utc,
-                "input_type": r.input_type,
-                "input_url": r.input_url,
-                "input_domain": r.input_domain,
-                "extracted_text_chars": r.extracted_text_chars,
-            }
-            for r in rows
-        ]
+def runs(limit: int = 50):
+    return {"items": list_runs(limit=limit)}
 
 
 @app.get("/runs/{run_id}")
-def get_run(run_id: int):
-    with get_session() as session:
-        r = session.get(Run, run_id)
-        if not r:
-            raise HTTPException(status_code=404, detail="Run not found")
-        return r.get_result()
+def run_detail(run_id: int):
+    r = get_run(run_id)
+    if not r:
+        return JSONResponse(status_code=404, content={"detail": "Run not found"})
+    return r
 
 
-@app.post("/analyze", response_model=AnalyzeResponse)
+@app.get("/runs-export")
+def runs_export(limit: int = 500):
+    items = export_runs(limit=limit)
+    return {"items": items, "exported_at_utc": datetime.utcnow().isoformat() + "Z"}
+
+
+@app.post("/analyze")
 async def analyze(req: AnalyzeRequest):
     has_url = bool(req.url and req.url.strip())
     has_text = bool(req.text and req.text.strip())
@@ -401,25 +416,26 @@ async def analyze(req: AnalyzeRequest):
     final_url = None
 
     if has_url:
-        url_norm = normalize_url(req.url)
+        url_norm = normalize_url(req.url or "")
         final_url, html = await fetch_html(url_norm)
         if html:
             extracted_text = extract_readable_text_from_html(html, url=final_url or url_norm)
 
     if not extracted_text and has_text:
-        extracted_text = req.text.strip()
+        extracted_text = (req.text or "").strip()
 
     preview = extracted_text[:400].replace("\n", " ").strip()
     chars = len(extracted_text)
 
     claim_texts = extract_claim_candidates(extracted_text, max_claims=req.max_claims)
+    claims: List[Dict[str, Any]] = []
 
-    claims: List[ClaimResult] = []
+    debate_meta: Dict[str, Any] = {"enabled": req.verifier == "debate", "claims_debated": 0, "items": []}
+
     for ct in claim_texts:
-        query = ct[:220]
-        raw_results = await serpapi_search(query, num=req.max_evidence_per_claim)
+        raw_results = await serpapi_search(ct[:220], num=req.max_evidence_per_claim)
 
-        ev_items: List[EvidenceItem] = []
+        ev_items: List[Dict[str, Any]] = []
         seen_domains = set()
 
         for rr in raw_results:
@@ -439,70 +455,82 @@ async def analyze(req: AnalyzeRequest):
             if len(snippet) < 40:
                 continue
 
-            dscore = score_domain(dom)
+            cred = score_domain_rubric(dom)
+            ov = compute_overlap(ct, snippet)
 
             ev_items.append(
-                EvidenceItem(
-                    url=link,
-                    title=rr.get("title"),
-                    snippet=snippet,
-                    domain=dom,
-                    domain_score=dscore,
-                )
+                {
+                    "url": link,
+                    "title": rr.get("title"),
+                    "snippet": snippet,
+                    "domain": dom,
+                    "domain_score": cred.score,
+                    "overlap": ov,
+                }
             )
 
-        verdict, conf, summary = baseline_verdict(ct, ev_items)
+        ev_items.sort(key=lambda e: (e["domain_score"], e["overlap"]), reverse=True)
+
+        ev_for_verdict = [EvidenceItem(**e) for e in ev_items]
+
+        verdict, conf, summary = baseline_verdict(ct, ev_for_verdict)
+        if req.verifier == "debate":
+            summary = summary + " | Debate skipped for now; baseline verifier active."
 
         claims.append(
-            ClaimResult(
-                claim_text=ct,
-                verdict=verdict,
-                confidence=round(conf, 2),
-                evidence=ev_items,
-                debate_summary=summary if SERPAPI_API_KEY else "SERPAPI_API_KEY not set. Evidence retrieval disabled.",
-            )
+            {
+                "claim_text": ct,
+                "verdict": verdict,
+                "confidence": round(float(conf), 2),
+                "evidence": ev_items,
+                "debate_summary": summary,
+            }
         )
 
-    input_domain_score = score_domain(domain or "") if domain else 65
-    input_domain_label = label_from_score(input_domain_score)
+    if domain:
+        input_cred = score_domain_rubric(domain)
+        input_domain_score = input_cred.score
+        input_domain_label = input_cred.label
+        input_domain_reasons = input_cred.reasons
+    else:
+        input_domain_score = 65
+        input_domain_label = "MEDIUM"
+        input_domain_reasons = {}
 
-    final_like = estimate_misinformation_likelihood(claims)
+    final_like = estimate_misinformation_likelihood([ClaimResult(**c) for c in claims])
 
-    response = AnalyzeResponse(
-        input_type=input_type,
-        domain=domain,
-        extracted_text_chars=chars,
-        extracted_text_preview=preview,
-        domain_score=input_domain_score,
-        domain_label=input_domain_label,
-        final_misinformation_likelihood=round(final_like, 2),
-        claims=claims,
-        timestamp_utc=datetime.utcnow().isoformat() + "Z",
-        metadata={
+    response_dict: Dict[str, Any] = {
+        "input_type": input_type,
+        "domain": domain,
+        "extracted_text_chars": chars,
+        "extracted_text_preview": preview,
+        "domain_score": input_domain_score,
+        "domain_label": input_domain_label,
+        "final_misinformation_likelihood": round(final_like, 2),
+        "claims": claims,
+        "timestamp_utc": datetime.utcnow().isoformat() + "Z",
+        "metadata": {
             "mode": req.mode,
             "final_url": final_url,
             "extraction_success": bool(extracted_text) and chars > 0,
             "claims_extracted": len(claims),
             "serpapi_enabled": bool(SERPAPI_API_KEY),
-            "note": "Step 5 enabled: snapshot saves runs; /runs and /runs/{id} endpoints added",
+            "domain_score_reasons": input_domain_reasons,
+            "verifier": req.verifier,
+            "debate": debate_meta,
+            "note": "Runs are saved to SQLite; list at GET /runs and export at GET /runs-export.",
         },
+    }
+
+    run_id = save_run(
+        input_type=input_type,
+        url=req.url,
+        text=req.text,
+        domain=domain,
+        mode=req.mode,
+        verifier=req.verifier,
+        response=response_dict,
     )
+    response_dict["metadata"]["run_id"] = run_id
 
-    # --- Snapshot saving ---
-    if req.mode == "snapshot":
-        with get_session() as session:
-            run = Run(
-                input_type=input_type,
-                input_url=req.url if has_url else None,
-                input_domain=domain,
-                extracted_text_chars=chars,
-                extracted_text_preview=preview,
-                result_json="{}",
-            )
-            run.set_result(response.dict())
-            session.add(run)
-            session.commit()
-            session.refresh(run)
-            response.metadata["run_id"] = run.id
-
-    return response
+    return response_dict
