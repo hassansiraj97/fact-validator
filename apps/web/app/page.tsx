@@ -193,7 +193,7 @@ export default function Home() {
             <label className="text-sm font-medium ml-0 lg:ml-2">Verifier</label>
             <select className="border rounded p-2" value={verifier} onChange={(e) => setVerifier(e.target.value as any)}>
               <option value="baseline">baseline</option>
-              <option value="debate">debate (not used)</option>
+              <option value="debate">debate (LLM PROVER/SKEPTIC/JUDGE)</option>
             </select>
           </div>
 
