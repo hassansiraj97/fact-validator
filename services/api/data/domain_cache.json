@@ -11,7 +11,7 @@
     "reasons": {
       "whitelist": "Domain appears in local reputable-source list (+20)."
     },
-    "ts": 1767828442
+    "ts": 1769597123
   },
   "un.org": {
     "score": 80,
@@ -19,15 +19,15 @@
     "reasons": {
       "whitelist": "Domain appears in local reputable-source list (+30)."
     },
-    "ts": 1767828442
+    "ts": 1769597123
   },
   "epa.gov": {
     "score": 85,
     "label": "HIGH",
     "reasons": {
-      "tld": "Government/Education domain suffix is a strong trust signal."
+      "tld": "Government/Education domain suffix is a strong trust signal (+35)."
     },
-    "ts": 1767828442
+    "ts": 1769597123
   },
   "nrdc.org": {
     "score": 50,
@@ -41,19 +41,19 @@
     "reasons": {
       "whitelist": "Domain appears in local reputable-source list (+25)."
     },
-    "ts": 1766112822
+    "ts": 1768901277
   },
   "freethink.com": {
     "score": 50,
     "label": "MEDIUM",
     "reasons": {},
-    "ts": 1766112822
+    "ts": 1768901277
   },
   "phys.org": {
     "score": 50,
     "label": "MEDIUM",
     "reasons": {},
-    "ts": 1766112822
+    "ts": 1768901277
   },
   "sciencedirect.com": {
     "score": 65,
@@ -61,13 +61,13 @@
     "reasons": {
       "whitelist": "Domain appears in local reputable-source list (+15)."
     },
-    "ts": 1766112824
+    "ts": 1768901279
   },
   "climateforesight.eu": {
     "score": 50,
     "label": "MEDIUM",
     "reasons": {},
-    "ts": 1766112824
+    "ts": 1768901279
   },
   "irena.org": {
     "score": 50,
@@ -116,10 +116,12 @@
     "ts": 1766112828
   },
   "theguardian.com": {
-    "score": 50,
+    "score": 70,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1766112828
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+20)."
+    },
+    "ts": 1769597651
   },
   "cambridge.org": {
     "score": 50,
@@ -151,25 +153,29 @@
     "reasons": {
       "whitelist": "Domain appears in local reputable-source list (+15)."
     },
-    "ts": 1767830126
+    "ts": 1769597123
   },
   "nytimes.com": {
-    "score": 50,
+    "score": 70,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1767830125
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+20)."
+    },
+    "ts": 1769597647
   },
   "bbc.com": {
-    "score": 50,
-    "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1767830125
+    "score": 80,
+    "label": "HIGH",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+30)."
+    },
+    "ts": 1769597653
   },
   "time.com": {
     "score": 50,
     "label": "MEDIUM",
     "reasons": {},
-    "ts": 1767830125
+    "ts": 1769597651
   },
   "springer.com": {
     "score": 50,
@@ -244,5 +250,99 @@
     "label": "MEDIUM",
     "reasons": {},
     "ts": 1768521297
+  },
+  "iea.org": {
+    "score": 70,
+    "label": "MEDIUM",
+    "reasons": {
+      "whitelist": "Domain appears in local reputable-source list (+20)."
+    },
+    "ts": 1768901279
+  },
+  "regulations.gov": {
+    "score": 85,
+    "label": "HIGH",
+    "reasons": {
+      "tld": "Government/Education domain suffix is a strong trust signal (+35)."
+    },
+    "ts": 1768901281
+  },
+  "nypost.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768901311
+  },
+  "msn.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768901315
+  },
+  "history.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768901315
+  },
+  "arise.tv": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768901331
+  },
+  "ir-ia.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768901331
+  },
+  "dw.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768901658
+  },
+  "ednews.net": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1768901674
+  },
+  "ndtv.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1769597547
+  },
+  "foxnews.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1769597645
+  },
+  "elpais.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1769597645
+  },
+  "npr.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1769597647
+  },
+  "brecorder.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1769597656
+  },
+  "cnn.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {},
+    "ts": 1769597785
   }
 }

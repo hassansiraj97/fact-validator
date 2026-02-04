@@ -1,0 +1,2041 @@
+{
+  "generated_at_utc": "20260120_093514",
+  "tests": [
+    {
+      "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+      "policy": {
+        "name": "P0_loose",
+        "min_source_score": 30,
+        "require_independent_domains": false,
+        "min_overlap": 4
+      },
+      "response": {
+        "input_type": "url",
+        "domain": "ourworldindata.org",
+        "extracted_text_chars": 6323,
+        "extracted_text_preview": "CO₂ and Greenhouse Gas Emissions Human emissions of greenhouse gases are the primary driver of climate change today.1 CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics, and grow the food we eat. If we want to reduce these emissions, we need to transform our energy systems, industries, and food",
+        "domain_score": 70,
+        "domain_label": "MEDIUM",
+        "final_misinformation_likelihood": 0.43,
+        "claims": [
+          {
+            "claim_text": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics, and grow the food we eat.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.epa.gov/ghgemissions/overview-greenhouse-gases",
+                "title": "Overview of Greenhouse Gases",
+                "snippet": "Carbon dioxide (CO2): Carbon dioxide enters the atmosphere through burning fossil fuels (coal, natural gas, and oil), solid waste, trees and other biological ...",
+                "domain": "epa.gov",
+                "base_domain": "epa.gov",
+                "domain_score": 85,
+                "overlap": 3
+              },
+              {
+                "url": "https://www.un.org/en/climatechange/science/causes-effects-climate-change",
+                "title": "Causes and Effects of Climate Change",
+                "snippet": "Generating power. A large chunk of global emissions comes from burning fossil fuels to produce electricity and heat. · Manufacturing goods · Cutting down forests.",
+                "domain": "un.org",
+                "base_domain": "un.org",
+                "domain_score": 80,
+                "overlap": 3
+              },
+              {
+                "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+                "title": "CO₂ and Greenhouse Gas Emissions",
+                "snippet": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics ...",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 17
+              },
+              {
+                "url": "https://en.wikipedia.org/wiki/Greenhouse_gas_emissions",
+                "title": "Greenhouse gas emissions",
+                "snippet": "This contributes to climate change. Carbon dioxide (CO 2), from burning fossil fuels such as coal, oil, and natural gas, is the main cause of climate change ...",
+                "domain": "en.wikipedia.org",
+                "base_domain": "wikipedia.org",
+                "domain_score": 65,
+                "overlap": 2
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "SUPPORTED",
+            "adjusted_confidence": 0.79,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 30,
+                "require_independent_domains": false,
+                "min_overlap": 4
+              },
+              "filtered_evidence_count": 4,
+              "distinct_base_domains": 4,
+              "strong_base_domains": [
+                "ourworldindata.org"
+              ],
+              "top_sources": [
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 17,
+                  "weight": 0.731,
+                  "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions"
+                },
+                {
+                  "base_domain": "epa.gov",
+                  "domain_score": 85,
+                  "overlap": 3,
+                  "weight": 0.693,
+                  "url": "https://www.epa.gov/ghgemissions/overview-greenhouse-gases"
+                },
+                {
+                  "base_domain": "un.org",
+                  "domain_score": 80,
+                  "overlap": 3,
+                  "weight": 0.661,
+                  "url": "https://www.un.org/en/climatechange/science/causes-effects-climate-change"
+                },
+                {
+                  "base_domain": "wikipedia.org",
+                  "domain_score": 65,
+                  "overlap": 2,
+                  "weight": 0.311,
+                  "url": "https://en.wikipedia.org/wiki/Greenhouse_gas_emissions"
+                }
+              ],
+              "reason": "Credible, independent sources show strong claim overlap."
+            }
+          },
+          {
+            "claim_text": "Emissions from food alone could use up all of our budget for 1.5°C or 2°C – but we have a range of opportunities to avoid this",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.science.org/doi/10.1126/science.aba7357",
+                "title": "Global food system emissions could preclude achieving ...",
+                "snippet": "We show that even if fossil fuel emissions were immediately halted, current trends in global food systems would prevent the achievement of the 1.5°C target.",
+                "domain": "science.org",
+                "base_domain": "science.org",
+                "domain_score": 75,
+                "overlap": 2
+              },
+              {
+                "url": "https://ourworldindata.org/food-emissions-carbon-budget",
+                "title": "Emissions from food alone could use up all of our budget ...",
+                "snippet": "The two big sources of greenhouse gas emissions are energy and food production. It's sometimes argued that we should focus on one or the other.",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 2
+              },
+              {
+                "url": "https://www.freethink.com/science/we-need-to-rethink-global-food-production-to-reach-our-climate-goals",
+                "title": "We need to rethink global food production to have a shot at ...",
+                "snippet": "Even if we stopped emissions from fossil fuels right now, emissions from food production alone would increase global temperatures 1.5°C. By ...",
+                "domain": "freethink.com",
+                "base_domain": "freethink.com",
+                "domain_score": 50,
+                "overlap": 3
+              },
+              {
+                "url": "https://phys.org/news/2020-11-global-food-emissions-threaten-15c.html",
+                "title": "Global food system emissions alone threaten warming ...",
+                "snippet": "Global food system emissions alone threaten warming beyond 1.5°C, but we can act now to stop it · Carbon budgets · Keeping warming below 2°C.",
+                "domain": "phys.org",
+                "base_domain": "phys.org",
+                "domain_score": 50,
+                "overlap": 3
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.66,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 30,
+                "require_independent_domains": false,
+                "min_overlap": 4
+              },
+              "filtered_evidence_count": 4,
+              "distinct_base_domains": 4,
+              "top_sources": [
+                {
+                  "base_domain": "science.org",
+                  "domain_score": 75,
+                  "overlap": 2,
+                  "weight": 0.409,
+                  "url": "https://www.science.org/doi/10.1126/science.aba7357"
+                },
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 2,
+                  "weight": 0.366,
+                  "url": "https://ourworldindata.org/food-emissions-carbon-budget"
+                },
+                {
+                  "base_domain": "freethink.com",
+                  "domain_score": 50,
+                  "overlap": 3,
+                  "weight": 0.202,
+                  "url": "https://www.freethink.com/science/we-need-to-rethink-global-food-production-to-reach-our-climate-goals"
+                },
+                {
+                  "base_domain": "phys.org",
+                  "domain_score": 50,
+                  "overlap": 3,
+                  "weight": 0.202,
+                  "url": "https://phys.org/news/2020-11-global-food-emissions-threaten-15c.html"
+                }
+              ],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "Many countries have decoupled economic growth from CO2 emissions, even if we take offshored production into account",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://ourworldindata.org/co2-gdp-decoupling",
+                "title": "Many countries have decoupled economic growth from ...",
+                "snippet": "It is possible to reduce emissions while growing the economy. But this decoupling needs to happen faster. By Hannah Ritchie.",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 1
+              },
+              {
+                "url": "https://www.iea.org/commentaries/the-relationship-between-growth-in-gdp-and-co2-has-loosened-it-needs-to-be-cut-completely",
+                "title": "The relationship between growth in GDP and CO2 has ...",
+                "snippet": "The loosening of the relationship between GDP and CO 2 emissions accelerates across the board, including in the Middle East and Southeast Asia.",
+                "domain": "iea.org",
+                "base_domain": "iea.org",
+                "domain_score": 70,
+                "overlap": 1
+              },
+              {
+                "url": "https://www.sciencedirect.com/science/article/pii/S2666792421000664",
+                "title": "Evidence of decoupling consumption-based CO2 ...",
+                "snippet": "We found that 32 out of 116 countries (mainly developed ones) achieved absolute decoupling between GDP and production-based emissions in recent years (2015– ...",
+                "domain": "sciencedirect.com",
+                "base_domain": "sciencedirect.com",
+                "domain_score": 65,
+                "overlap": 3
+              },
+              {
+                "url": "https://www.climateforesight.eu/seeds/decoupling-emissions-from-economic-growth/",
+                "title": "Decoupling (emissions from economic growth) - Foresight",
+                "snippet": "Decoupling indicates a situation in which two or more activities are separated, or do not develop in the same way.",
+                "domain": "climateforesight.eu",
+                "base_domain": "climateforesight.eu",
+                "domain_score": 50,
+                "overlap": 0
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.65,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 30,
+                "require_independent_domains": false,
+                "min_overlap": 4
+              },
+              "filtered_evidence_count": 4,
+              "distinct_base_domains": 4,
+              "top_sources": [
+                {
+                  "base_domain": "sciencedirect.com",
+                  "domain_score": 65,
+                  "overlap": 3,
+                  "weight": 0.467,
+                  "url": "https://www.sciencedirect.com/science/article/pii/S2666792421000664"
+                },
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 1,
+                  "weight": 0.183,
+                  "url": "https://ourworldindata.org/co2-gdp-decoupling"
+                },
+                {
+                  "base_domain": "iea.org",
+                  "domain_score": 70,
+                  "overlap": 1,
+                  "weight": 0.183,
+                  "url": "https://www.iea.org/commentaries/the-relationship-between-growth-in-gdp-and-co2-has-loosened-it-needs-to-be-cut-completely"
+                },
+                {
+                  "base_domain": "climateforesight.eu",
+                  "domain_score": 50,
+                  "overlap": 0,
+                  "weight": 0.0,
+                  "url": "https://www.climateforesight.eu/seeds/decoupling-emissions-from-economic-growth/"
+                }
+              ],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          }
+        ],
+        "timestamp_utc": "2026-01-20T09:35:24.564809Z",
+        "metadata": {
+          "mode": "live",
+          "final_url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+          "extraction_success": true,
+          "claims_extracted": 3,
+          "serpapi_enabled": true,
+          "domain_score_reasons": {
+            "whitelist": "Domain appears in local reputable-source list (+20)."
+          },
+          "verifier": "baseline",
+          "step11_policy": {
+            "min_source_score": 30,
+            "require_independent_domains": false,
+            "min_overlap": 4,
+            "max_sources_per_base_domain": 2,
+            "enable_weighted_confidence": true
+          },
+          "note": "Step 11 enabled: credibility-weighted aggregation + independence constraints.",
+          "run_id": 21
+        }
+      }
+    },
+    {
+      "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+      "policy": {
+        "name": "P1_default",
+        "min_source_score": 50,
+        "require_independent_domains": true,
+        "min_overlap": 6
+      },
+      "response": {
+        "input_type": "url",
+        "domain": "ourworldindata.org",
+        "extracted_text_chars": 6323,
+        "extracted_text_preview": "CO₂ and Greenhouse Gas Emissions Human emissions of greenhouse gases are the primary driver of climate change today.1 CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics, and grow the food we eat. If we want to reduce these emissions, we need to transform our energy systems, industries, and food",
+        "domain_score": 70,
+        "domain_label": "MEDIUM",
+        "final_misinformation_likelihood": 0.5,
+        "claims": [
+          {
+            "claim_text": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics, and grow the food we eat.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.epa.gov/ghgemissions/overview-greenhouse-gases",
+                "title": "Overview of Greenhouse Gases",
+                "snippet": "Carbon dioxide (CO2): Carbon dioxide enters the atmosphere through burning fossil fuels (coal, natural gas, and oil), solid waste, trees and other biological ...",
+                "domain": "epa.gov",
+                "base_domain": "epa.gov",
+                "domain_score": 85,
+                "overlap": 3
+              },
+              {
+                "url": "https://www.un.org/en/climatechange/science/causes-effects-climate-change",
+                "title": "Causes and Effects of Climate Change",
+                "snippet": "Generating power. A large chunk of global emissions comes from burning fossil fuels to produce electricity and heat. · Manufacturing goods · Cutting down forests.",
+                "domain": "un.org",
+                "base_domain": "un.org",
+                "domain_score": 80,
+                "overlap": 3
+              },
+              {
+                "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+                "title": "CO₂ and Greenhouse Gas Emissions",
+                "snippet": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics ...",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 17
+              },
+              {
+                "url": "https://en.wikipedia.org/wiki/Greenhouse_gas_emissions",
+                "title": "Greenhouse gas emissions",
+                "snippet": "This contributes to climate change. Carbon dioxide (CO 2), from burning fossil fuels such as coal, oil, and natural gas, is the main cause of climate change ...",
+                "domain": "en.wikipedia.org",
+                "base_domain": "wikipedia.org",
+                "domain_score": 65,
+                "overlap": 2
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.74,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 50,
+                "require_independent_domains": true,
+                "min_overlap": 6
+              },
+              "filtered_evidence_count": 4,
+              "distinct_base_domains": 4,
+              "top_sources": [
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 17,
+                  "weight": 0.731,
+                  "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions"
+                },
+                {
+                  "base_domain": "epa.gov",
+                  "domain_score": 85,
+                  "overlap": 3,
+                  "weight": 0.462,
+                  "url": "https://www.epa.gov/ghgemissions/overview-greenhouse-gases"
+                },
+                {
+                  "base_domain": "un.org",
+                  "domain_score": 80,
+                  "overlap": 3,
+                  "weight": 0.44,
+                  "url": "https://www.un.org/en/climatechange/science/causes-effects-climate-change"
+                },
+                {
+                  "base_domain": "wikipedia.org",
+                  "domain_score": 65,
+                  "overlap": 2,
+                  "weight": 0.207,
+                  "url": "https://en.wikipedia.org/wiki/Greenhouse_gas_emissions"
+                }
+              ],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "Emissions from food alone could use up all of our budget for 1.5°C or 2°C – but we have a range of opportunities to avoid this",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.science.org/doi/10.1126/science.aba7357",
+                "title": "Global food system emissions could preclude achieving ...",
+                "snippet": "We show that even if fossil fuel emissions were immediately halted, current trends in global food systems would prevent the achievement of the 1.5°C target.",
+                "domain": "science.org",
+                "base_domain": "science.org",
+                "domain_score": 75,
+                "overlap": 2
+              },
+              {
+                "url": "https://ourworldindata.org/food-emissions-carbon-budget",
+                "title": "Emissions from food alone could use up all of our budget ...",
+                "snippet": "The two big sources of greenhouse gas emissions are energy and food production. It's sometimes argued that we should focus on one or the other.",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 2
+              },
+              {
+                "url": "https://www.freethink.com/science/we-need-to-rethink-global-food-production-to-reach-our-climate-goals",
+                "title": "We need to rethink global food production to have a shot at ...",
+                "snippet": "Even if we stopped emissions from fossil fuels right now, emissions from food production alone would increase global temperatures 1.5°C. By ...",
+                "domain": "freethink.com",
+                "base_domain": "freethink.com",
+                "domain_score": 50,
+                "overlap": 3
+              },
+              {
+                "url": "https://phys.org/news/2020-11-global-food-emissions-threaten-15c.html",
+                "title": "Global food system emissions alone threaten warming ...",
+                "snippet": "Global food system emissions alone threaten warming beyond 1.5°C, but we can act now to stop it · Carbon budgets · Keeping warming below 2°C.",
+                "domain": "phys.org",
+                "base_domain": "phys.org",
+                "domain_score": 50,
+                "overlap": 3
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.63,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 50,
+                "require_independent_domains": true,
+                "min_overlap": 6
+              },
+              "filtered_evidence_count": 4,
+              "distinct_base_domains": 4,
+              "top_sources": [
+                {
+                  "base_domain": "science.org",
+                  "domain_score": 75,
+                  "overlap": 2,
+                  "weight": 0.273,
+                  "url": "https://www.science.org/doi/10.1126/science.aba7357"
+                },
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 2,
+                  "weight": 0.244,
+                  "url": "https://ourworldindata.org/food-emissions-carbon-budget"
+                },
+                {
+                  "base_domain": "freethink.com",
+                  "domain_score": 50,
+                  "overlap": 3,
+                  "weight": 0.134,
+                  "url": "https://www.freethink.com/science/we-need-to-rethink-global-food-production-to-reach-our-climate-goals"
+                },
+                {
+                  "base_domain": "phys.org",
+                  "domain_score": 50,
+                  "overlap": 3,
+                  "weight": 0.134,
+                  "url": "https://phys.org/news/2020-11-global-food-emissions-threaten-15c.html"
+                }
+              ],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "Many countries have decoupled economic growth from CO2 emissions, even if we take offshored production into account",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://ourworldindata.org/co2-gdp-decoupling",
+                "title": "Many countries have decoupled economic growth from ...",
+                "snippet": "It is possible to reduce emissions while growing the economy. But this decoupling needs to happen faster. By Hannah Ritchie.",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 1
+              },
+              {
+                "url": "https://www.iea.org/commentaries/the-relationship-between-growth-in-gdp-and-co2-has-loosened-it-needs-to-be-cut-completely",
+                "title": "The relationship between growth in GDP and CO2 has ...",
+                "snippet": "The loosening of the relationship between GDP and CO 2 emissions accelerates across the board, including in the Middle East and Southeast Asia.",
+                "domain": "iea.org",
+                "base_domain": "iea.org",
+                "domain_score": 70,
+                "overlap": 1
+              },
+              {
+                "url": "https://www.sciencedirect.com/science/article/pii/S2666792421000664",
+                "title": "Evidence of decoupling consumption-based CO2 ...",
+                "snippet": "We found that 32 out of 116 countries (mainly developed ones) achieved absolute decoupling between GDP and production-based emissions in recent years (2015– ...",
+                "domain": "sciencedirect.com",
+                "base_domain": "sciencedirect.com",
+                "domain_score": 65,
+                "overlap": 3
+              },
+              {
+                "url": "https://www.climateforesight.eu/seeds/decoupling-emissions-from-economic-growth/",
+                "title": "Decoupling (emissions from economic growth) - Foresight",
+                "snippet": "Decoupling indicates a situation in which two or more activities are separated, or do not develop in the same way.",
+                "domain": "climateforesight.eu",
+                "base_domain": "climateforesight.eu",
+                "domain_score": 50,
+                "overlap": 0
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.61,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 50,
+                "require_independent_domains": true,
+                "min_overlap": 6
+              },
+              "filtered_evidence_count": 4,
+              "distinct_base_domains": 4,
+              "top_sources": [
+                {
+                  "base_domain": "sciencedirect.com",
+                  "domain_score": 65,
+                  "overlap": 3,
+                  "weight": 0.311,
+                  "url": "https://www.sciencedirect.com/science/article/pii/S2666792421000664"
+                },
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 1,
+                  "weight": 0.122,
+                  "url": "https://ourworldindata.org/co2-gdp-decoupling"
+                },
+                {
+                  "base_domain": "iea.org",
+                  "domain_score": 70,
+                  "overlap": 1,
+                  "weight": 0.122,
+                  "url": "https://www.iea.org/commentaries/the-relationship-between-growth-in-gdp-and-co2-has-loosened-it-needs-to-be-cut-completely"
+                },
+                {
+                  "base_domain": "climateforesight.eu",
+                  "domain_score": 50,
+                  "overlap": 0,
+                  "weight": 0.0,
+                  "url": "https://www.climateforesight.eu/seeds/decoupling-emissions-from-economic-growth/"
+                }
+              ],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          }
+        ],
+        "timestamp_utc": "2026-01-20T09:35:30.094928Z",
+        "metadata": {
+          "mode": "live",
+          "final_url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+          "extraction_success": true,
+          "claims_extracted": 3,
+          "serpapi_enabled": true,
+          "domain_score_reasons": {
+            "whitelist": "Domain appears in local reputable-source list (+20)."
+          },
+          "verifier": "baseline",
+          "step11_policy": {
+            "min_source_score": 50,
+            "require_independent_domains": true,
+            "min_overlap": 6,
+            "max_sources_per_base_domain": 2,
+            "enable_weighted_confidence": true
+          },
+          "note": "Step 11 enabled: credibility-weighted aggregation + independence constraints.",
+          "run_id": 22
+        }
+      }
+    },
+    {
+      "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+      "policy": {
+        "name": "P2_strict",
+        "min_source_score": 70,
+        "require_independent_domains": true,
+        "min_overlap": 7
+      },
+      "response": {
+        "input_type": "url",
+        "domain": "ourworldindata.org",
+        "extracted_text_chars": 6323,
+        "extracted_text_preview": "CO₂ and Greenhouse Gas Emissions Human emissions of greenhouse gases are the primary driver of climate change today.1 CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics, and grow the food we eat. If we want to reduce these emissions, we need to transform our energy systems, industries, and food",
+        "domain_score": 70,
+        "domain_label": "MEDIUM",
+        "final_misinformation_likelihood": 0.43,
+        "claims": [
+          {
+            "claim_text": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics, and grow the food we eat.",
+            "verdict": "SUPPORTED",
+            "confidence": 0.75,
+            "evidence": [
+              {
+                "url": "https://www.regulations.gov/comment/EPA-HQ-OAR-2025-0194-16879",
+                "title": "Comment submitted by Jessica Butcher",
+                "snippet": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement ...",
+                "domain": "regulations.gov",
+                "base_domain": "regulations.gov",
+                "domain_score": 85,
+                "overlap": 16
+              },
+              {
+                "url": "https://www.epa.gov/ghgemissions/overview-greenhouse-gases",
+                "title": "Overview of Greenhouse Gases",
+                "snippet": "Carbon dioxide (CO2): Carbon dioxide enters the atmosphere through burning fossil fuels (coal, natural gas, and oil), solid waste, trees and other biological ...",
+                "domain": "epa.gov",
+                "base_domain": "epa.gov",
+                "domain_score": 85,
+                "overlap": 3
+              },
+              {
+                "url": "https://www.un.org/en/climatechange/science/causes-effects-climate-change",
+                "title": "Causes and Effects of Climate Change",
+                "snippet": "Generating power. A large chunk of global emissions comes from burning fossil fuels to produce electricity and heat. · Manufacturing goods · Cutting down forests.",
+                "domain": "un.org",
+                "base_domain": "un.org",
+                "domain_score": 80,
+                "overlap": 3
+              },
+              {
+                "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+                "title": "CO₂ and Greenhouse Gas Emissions",
+                "snippet": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics ...",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 17
+              }
+            ],
+            "debate_summary": "At least two distinct medium/high domains have strong keyword overlap.",
+            "adjusted_verdict": "SUPPORTED",
+            "adjusted_confidence": 0.79,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 70,
+                "require_independent_domains": true,
+                "min_overlap": 7
+              },
+              "filtered_evidence_count": 4,
+              "distinct_base_domains": 4,
+              "strong_base_domains": [
+                "regulations.gov",
+                "ourworldindata.org"
+              ],
+              "top_sources": [
+                {
+                  "base_domain": "regulations.gov",
+                  "domain_score": 85,
+                  "overlap": 16,
+                  "weight": 0.924,
+                  "url": "https://www.regulations.gov/comment/EPA-HQ-OAR-2025-0194-16879"
+                },
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 17,
+                  "weight": 0.731,
+                  "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions"
+                },
+                {
+                  "base_domain": "epa.gov",
+                  "domain_score": 85,
+                  "overlap": 3,
+                  "weight": 0.396,
+                  "url": "https://www.epa.gov/ghgemissions/overview-greenhouse-gases"
+                },
+                {
+                  "base_domain": "un.org",
+                  "domain_score": 80,
+                  "overlap": 3,
+                  "weight": 0.377,
+                  "url": "https://www.un.org/en/climatechange/science/causes-effects-climate-change"
+                }
+              ],
+              "reason": "Credible, independent sources show strong claim overlap."
+            }
+          },
+          {
+            "claim_text": "Emissions from food alone could use up all of our budget for 1.5°C or 2°C – but we have a range of opportunities to avoid this",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.science.org/doi/10.1126/science.aba7357",
+                "title": "Global food system emissions could preclude achieving ...",
+                "snippet": "We show that even if fossil fuel emissions were immediately halted, current trends in global food systems would prevent the achievement of the 1.5°C target.",
+                "domain": "science.org",
+                "base_domain": "science.org",
+                "domain_score": 75,
+                "overlap": 2
+              },
+              {
+                "url": "https://ourworldindata.org/food-emissions-carbon-budget",
+                "title": "Emissions from food alone could use up all of our budget ...",
+                "snippet": "The two big sources of greenhouse gas emissions are energy and food production. It's sometimes argued that we should focus on one or the other.",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 2
+              },
+              {
+                "url": "https://www.freethink.com/science/we-need-to-rethink-global-food-production-to-reach-our-climate-goals",
+                "title": "We need to rethink global food production to have a shot at ...",
+                "snippet": "Even if we stopped emissions from fossil fuels right now, emissions from food production alone would increase global temperatures 1.5°C. By ...",
+                "domain": "freethink.com",
+                "base_domain": "freethink.com",
+                "domain_score": 50,
+                "overlap": 3
+              },
+              {
+                "url": "https://phys.org/news/2020-11-global-food-emissions-threaten-15c.html",
+                "title": "Global food system emissions alone threaten warming ...",
+                "snippet": "Global food system emissions alone threaten warming beyond 1.5°C, but we can act now to stop it · Carbon budgets · Keeping warming below 2°C.",
+                "domain": "phys.org",
+                "base_domain": "phys.org",
+                "domain_score": 50,
+                "overlap": 3
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.63,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 70,
+                "require_independent_domains": true,
+                "min_overlap": 7
+              },
+              "filtered_evidence_count": 2,
+              "distinct_base_domains": 2,
+              "top_sources": [
+                {
+                  "base_domain": "science.org",
+                  "domain_score": 75,
+                  "overlap": 2,
+                  "weight": 0.234,
+                  "url": "https://www.science.org/doi/10.1126/science.aba7357"
+                },
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 2,
+                  "weight": 0.209,
+                  "url": "https://ourworldindata.org/food-emissions-carbon-budget"
+                }
+              ],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "Many countries have decoupled economic growth from CO2 emissions, even if we take offshored production into account",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://ourworldindata.org/co2-gdp-decoupling",
+                "title": "Many countries have decoupled economic growth from ...",
+                "snippet": "It is possible to reduce emissions while growing the economy. But this decoupling needs to happen faster. By Hannah Ritchie.",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 1
+              },
+              {
+                "url": "https://www.iea.org/commentaries/the-relationship-between-growth-in-gdp-and-co2-has-loosened-it-needs-to-be-cut-completely",
+                "title": "The relationship between growth in GDP and CO2 has ...",
+                "snippet": "The loosening of the relationship between GDP and CO 2 emissions accelerates across the board, including in the Middle East and Southeast Asia.",
+                "domain": "iea.org",
+                "base_domain": "iea.org",
+                "domain_score": 70,
+                "overlap": 1
+              },
+              {
+                "url": "https://www.sciencedirect.com/science/article/pii/S2666792421000664",
+                "title": "Evidence of decoupling consumption-based CO2 ...",
+                "snippet": "We found that 32 out of 116 countries (mainly developed ones) achieved absolute decoupling between GDP and production-based emissions in recent years (2015– ...",
+                "domain": "sciencedirect.com",
+                "base_domain": "sciencedirect.com",
+                "domain_score": 65,
+                "overlap": 3
+              },
+              {
+                "url": "https://www.climateforesight.eu/seeds/decoupling-emissions-from-economic-growth/",
+                "title": "Decoupling (emissions from economic growth) - Foresight",
+                "snippet": "Decoupling indicates a situation in which two or more activities are separated, or do not develop in the same way.",
+                "domain": "climateforesight.eu",
+                "base_domain": "climateforesight.eu",
+                "domain_score": 50,
+                "overlap": 0
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.59,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 70,
+                "require_independent_domains": true,
+                "min_overlap": 7
+              },
+              "filtered_evidence_count": 2,
+              "distinct_base_domains": 2,
+              "top_sources": [
+                {
+                  "base_domain": "ourworldindata.org",
+                  "domain_score": 70,
+                  "overlap": 1,
+                  "weight": 0.104,
+                  "url": "https://ourworldindata.org/co2-gdp-decoupling"
+                },
+                {
+                  "base_domain": "iea.org",
+                  "domain_score": 70,
+                  "overlap": 1,
+                  "weight": 0.104,
+                  "url": "https://www.iea.org/commentaries/the-relationship-between-growth-in-gdp-and-co2-has-loosened-it-needs-to-be-cut-completely"
+                }
+              ],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          }
+        ],
+        "timestamp_utc": "2026-01-20T09:35:38.083193Z",
+        "metadata": {
+          "mode": "live",
+          "final_url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+          "extraction_success": true,
+          "claims_extracted": 3,
+          "serpapi_enabled": true,
+          "domain_score_reasons": {
+            "whitelist": "Domain appears in local reputable-source list (+20)."
+          },
+          "verifier": "baseline",
+          "step11_policy": {
+            "min_source_score": 70,
+            "require_independent_domains": true,
+            "min_overlap": 7,
+            "max_sources_per_base_domain": 2,
+            "enable_weighted_confidence": true
+          },
+          "note": "Step 11 enabled: credibility-weighted aggregation + independence constraints.",
+          "run_id": 23
+        }
+      }
+    },
+    {
+      "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+      "policy": {
+        "name": "P3_very_strict",
+        "min_source_score": 80,
+        "require_independent_domains": true,
+        "min_overlap": 8
+      },
+      "response": {
+        "input_type": "url",
+        "domain": "ourworldindata.org",
+        "extracted_text_chars": 6323,
+        "extracted_text_preview": "CO₂ and Greenhouse Gas Emissions Human emissions of greenhouse gases are the primary driver of climate change today.1 CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics, and grow the food we eat. If we want to reduce these emissions, we need to transform our energy systems, industries, and food",
+        "domain_score": 70,
+        "domain_label": "MEDIUM",
+        "final_misinformation_likelihood": 0.5,
+        "claims": [
+          {
+            "claim_text": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics, and grow the food we eat.",
+            "verdict": "SUPPORTED",
+            "confidence": 0.75,
+            "evidence": [
+              {
+                "url": "https://www.regulations.gov/comment/EPA-HQ-OAR-2025-0194-16879",
+                "title": "Comment submitted by Jessica Butcher",
+                "snippet": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement ...",
+                "domain": "regulations.gov",
+                "base_domain": "regulations.gov",
+                "domain_score": 85,
+                "overlap": 16
+              },
+              {
+                "url": "https://www.epa.gov/ghgemissions/overview-greenhouse-gases",
+                "title": "Overview of Greenhouse Gases",
+                "snippet": "Carbon dioxide (CO2): Carbon dioxide enters the atmosphere through burning fossil fuels (coal, natural gas, and oil), solid waste, trees and other biological ...",
+                "domain": "epa.gov",
+                "base_domain": "epa.gov",
+                "domain_score": 85,
+                "overlap": 3
+              },
+              {
+                "url": "https://www.un.org/en/climatechange/science/causes-effects-climate-change",
+                "title": "Causes and Effects of Climate Change",
+                "snippet": "Generating power. A large chunk of global emissions comes from burning fossil fuels to produce electricity and heat. · Manufacturing goods · Cutting down forests.",
+                "domain": "un.org",
+                "base_domain": "un.org",
+                "domain_score": 80,
+                "overlap": 3
+              },
+              {
+                "url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+                "title": "CO₂ and Greenhouse Gas Emissions",
+                "snippet": "CO2 and other greenhouse gases like methane and nitrous oxide are emitted when we burn fossil fuels, produce materials such as steel, cement, and plastics ...",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 17
+              }
+            ],
+            "debate_summary": "At least two distinct medium/high domains have strong keyword overlap.",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.74,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 80,
+                "require_independent_domains": true,
+                "min_overlap": 8
+              },
+              "filtered_evidence_count": 3,
+              "distinct_base_domains": 3,
+              "top_sources": [
+                {
+                  "base_domain": "regulations.gov",
+                  "domain_score": 85,
+                  "overlap": 16,
+                  "weight": 0.924,
+                  "url": "https://www.regulations.gov/comment/EPA-HQ-OAR-2025-0194-16879"
+                },
+                {
+                  "base_domain": "epa.gov",
+                  "domain_score": 85,
+                  "overlap": 3,
+                  "weight": 0.347,
+                  "url": "https://www.epa.gov/ghgemissions/overview-greenhouse-gases"
+                },
+                {
+                  "base_domain": "un.org",
+                  "domain_score": 80,
+                  "overlap": 3,
+                  "weight": 0.33,
+                  "url": "https://www.un.org/en/climatechange/science/causes-effects-climate-change"
+                }
+              ],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "Emissions from food alone could use up all of our budget for 1.5°C or 2°C – but we have a range of opportunities to avoid this",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.science.org/doi/10.1126/science.aba7357",
+                "title": "Global food system emissions could preclude achieving ...",
+                "snippet": "We show that even if fossil fuel emissions were immediately halted, current trends in global food systems would prevent the achievement of the 1.5°C target.",
+                "domain": "science.org",
+                "base_domain": "science.org",
+                "domain_score": 75,
+                "overlap": 2
+              },
+              {
+                "url": "https://ourworldindata.org/food-emissions-carbon-budget",
+                "title": "Emissions from food alone could use up all of our budget ...",
+                "snippet": "The two big sources of greenhouse gas emissions are energy and food production. It's sometimes argued that we should focus on one or the other.",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 2
+              },
+              {
+                "url": "https://www.freethink.com/science/we-need-to-rethink-global-food-production-to-reach-our-climate-goals",
+                "title": "We need to rethink global food production to have a shot at ...",
+                "snippet": "Even if we stopped emissions from fossil fuels right now, emissions from food production alone would increase global temperatures 1.5°C. By ...",
+                "domain": "freethink.com",
+                "base_domain": "freethink.com",
+                "domain_score": 50,
+                "overlap": 3
+              },
+              {
+                "url": "https://phys.org/news/2020-11-global-food-emissions-threaten-15c.html",
+                "title": "Global food system emissions alone threaten warming ...",
+                "snippet": "Global food system emissions alone threaten warming beyond 1.5°C, but we can act now to stop it · Carbon budgets · Keeping warming below 2°C.",
+                "domain": "phys.org",
+                "base_domain": "phys.org",
+                "domain_score": 50,
+                "overlap": 3
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.56,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 80,
+                "require_independent_domains": true,
+                "min_overlap": 8
+              },
+              "filtered_evidence_count": 0,
+              "distinct_base_domains": 0,
+              "top_sources": [],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "Many countries have decoupled economic growth from CO2 emissions, even if we take offshored production into account",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://ourworldindata.org/co2-gdp-decoupling",
+                "title": "Many countries have decoupled economic growth from ...",
+                "snippet": "It is possible to reduce emissions while growing the economy. But this decoupling needs to happen faster. By Hannah Ritchie.",
+                "domain": "ourworldindata.org",
+                "base_domain": "ourworldindata.org",
+                "domain_score": 70,
+                "overlap": 1
+              },
+              {
+                "url": "https://www.iea.org/commentaries/the-relationship-between-growth-in-gdp-and-co2-has-loosened-it-needs-to-be-cut-completely",
+                "title": "The relationship between growth in GDP and CO2 has ...",
+                "snippet": "The loosening of the relationship between GDP and CO 2 emissions accelerates across the board, including in the Middle East and Southeast Asia.",
+                "domain": "iea.org",
+                "base_domain": "iea.org",
+                "domain_score": 70,
+                "overlap": 1
+              },
+              {
+                "url": "https://www.sciencedirect.com/science/article/pii/S2666792421000664",
+                "title": "Evidence of decoupling consumption-based CO2 ...",
+                "snippet": "We found that 32 out of 116 countries (mainly developed ones) achieved absolute decoupling between GDP and production-based emissions in recent years (2015– ...",
+                "domain": "sciencedirect.com",
+                "base_domain": "sciencedirect.com",
+                "domain_score": 65,
+                "overlap": 3
+              },
+              {
+                "url": "https://www.climateforesight.eu/seeds/decoupling-emissions-from-economic-growth/",
+                "title": "Decoupling (emissions from economic growth) - Foresight",
+                "snippet": "Decoupling indicates a situation in which two or more activities are separated, or do not develop in the same way.",
+                "domain": "climateforesight.eu",
+                "base_domain": "climateforesight.eu",
+                "domain_score": 50,
+                "overlap": 0
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.56,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 80,
+                "require_independent_domains": true,
+                "min_overlap": 8
+              },
+              "filtered_evidence_count": 0,
+              "distinct_base_domains": 0,
+              "top_sources": [],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          }
+        ],
+        "timestamp_utc": "2026-01-20T09:35:46.123345Z",
+        "metadata": {
+          "mode": "live",
+          "final_url": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+          "extraction_success": true,
+          "claims_extracted": 3,
+          "serpapi_enabled": true,
+          "domain_score_reasons": {
+            "whitelist": "Domain appears in local reputable-source list (+20)."
+          },
+          "verifier": "baseline",
+          "step11_policy": {
+            "min_source_score": 80,
+            "require_independent_domains": true,
+            "min_overlap": 8,
+            "max_sources_per_base_domain": 2,
+            "enable_weighted_confidence": true
+          },
+          "note": "Step 11 enabled: credibility-weighted aggregation + independence constraints.",
+          "run_id": 24
+        }
+      }
+    },
+    {
+      "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+      "policy": {
+        "name": "P0_loose",
+        "min_source_score": 30,
+        "require_independent_domains": false,
+        "min_overlap": 4
+      },
+      "response": {
+        "input_type": "url",
+        "domain": "bbc.com",
+        "extracted_text_chars": 6326,
+        "extracted_text_preview": "European military personnel arrive in Greenland as Trump says US needs island A small French military contingent has arrived in Greenland's capital Nuuk, officials say, as several European states deploy small numbers in a so-called reconnaissance mission. The limited deployment, which also involves Germany, Sweden, Norway, Finland, the Netherlands and the UK, comes as US President Donald Trump con",
+        "domain_score": 50,
+        "domain_label": "MEDIUM",
+        "final_misinformation_likelihood": 0.29,
+        "claims": [
+          {
+            "claim_text": "Germany was sending an A400M transport plane to Nuuk on Thursday with a contingent of 13 soldiers, although officials said they would stay in Greenland only until Saturday.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "Germany was sending an A400M transport plane to Nuuk on Thursday with a contingent of 13 soldiers, although officials said they would stay in ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 14
+              },
+              {
+                "url": "https://www.msn.com/en-us/news/world/first-nato-troops-touch-down-on-greenland-as-german-army-en-route/ar-AA1UiEef",
+                "title": "First NATO troops touch down on Greenland as German ...",
+                "snippet": "... will last. The German contingent of 13 who arrived on a A400M transport plane will stay in Nuuk only until Saturday, officials said. Danish ...",
+                "domain": "msn.com",
+                "base_domain": "msn.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "https://www.arise.tv/european-troops-deploy-to-greenland-as-trump-insists-us-needs-island/",
+                "title": "European Troops Deploy To Greenland As Trump Insists ...",
+                "snippet": "Germany confirmed it was sending an A400M transport aircraft to Nuuk with 13 soldiers, though officials said they would remain in Greenland ...",
+                "domain": "arise.tv",
+                "base_domain": "arise.tv",
+                "domain_score": 50,
+                "overlap": 10
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "SUPPORTED",
+            "adjusted_confidence": 0.72,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 30,
+                "require_independent_domains": false,
+                "min_overlap": 4
+              },
+              "filtered_evidence_count": 3,
+              "distinct_base_domains": 3,
+              "strong_base_domains": [
+                "bbc.com",
+                "msn.com",
+                "arise.tv"
+              ],
+              "top_sources": [
+                {
+                  "base_domain": "bbc.com",
+                  "domain_score": 50,
+                  "overlap": 14,
+                  "weight": 0.269,
+                  "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo"
+                },
+                {
+                  "base_domain": "msn.com",
+                  "domain_score": 50,
+                  "overlap": 11,
+                  "weight": 0.269,
+                  "url": "https://www.msn.com/en-us/news/world/first-nato-troops-touch-down-on-greenland-as-german-army-en-route/ar-AA1UiEef"
+                },
+                {
+                  "base_domain": "arise.tv",
+                  "domain_score": 50,
+                  "overlap": 10,
+                  "weight": 0.269,
+                  "url": "https://www.arise.tv/european-troops-deploy-to-greenland-as-trump-insists-us-needs-island/"
+                }
+              ],
+              "reason": "Credible, independent sources show strong claim overlap."
+            }
+          },
+          {
+            "claim_text": "The US already has a military base in Greenland, currently staffed by up to 150 people, and has the option of bringing in far greater numbers under existing agreements with Copenhagen.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "The US already has a military base in Greenland, currently staffed by up to 150 people, and has the option of bringing in far greater numbers ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "http://www.msn.com/en-us/news/world/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=ientp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
+                "title": "Europe allies begin Greenland military mission as Trump ...",
+                "snippet": "... 150 people, and has the option of bringing in far greater numbers under existing agreements with Copenhagen. But the Danish-led initiative is ...",
+                "domain": "msn.com",
+                "base_domain": "msn.com",
+                "domain_score": 50,
+                "overlap": 9
+              },
+              {
+                "url": "https://www.usatoday.com/story/news/nation/2026/01/15/trump-military-greenland-pituffik-space-base/88201534007/",
+                "title": "Greenland's only US military base is (quietly) getting a ...",
+                "snippet": "Today, about 150 American military personnel are stationed at the Cold War-era base formerly known at Thule Air Force Base, joined by hundreds ...",
+                "domain": "usatoday.com",
+                "base_domain": "usatoday.com",
+                "domain_score": 50,
+                "overlap": 2
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "SUPPORTED",
+            "adjusted_confidence": 0.72,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 30,
+                "require_independent_domains": false,
+                "min_overlap": 4
+              },
+              "filtered_evidence_count": 3,
+              "distinct_base_domains": 3,
+              "strong_base_domains": [
+                "bbc.com",
+                "msn.com"
+              ],
+              "top_sources": [
+                {
+                  "base_domain": "bbc.com",
+                  "domain_score": 50,
+                  "overlap": 11,
+                  "weight": 0.269,
+                  "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo"
+                },
+                {
+                  "base_domain": "msn.com",
+                  "domain_score": 50,
+                  "overlap": 9,
+                  "weight": 0.269,
+                  "url": "http://www.msn.com/en-us/news/world/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=ientp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1"
+                },
+                {
+                  "base_domain": "usatoday.com",
+                  "domain_score": 50,
+                  "overlap": 2,
+                  "weight": 0.134,
+                  "url": "https://www.usatoday.com/story/news/nation/2026/01/15/trump-military-greenland-pituffik-space-base/88201534007/"
+                }
+              ],
+              "reason": "Credible, independent sources show strong claim overlap."
+            }
+          },
+          {
+            "claim_text": "Senior diplomat Olivier Poivre d'Arvor saw the mission as sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present.\"",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.aol.com/news/europe-allies-begin-greenland-military-115318741.html",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "Senior diplomat Olivier Poivre d'Arvor saw the mission as sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present ...",
+                "domain": "aol.com",
+                "base_domain": "aol.com",
+                "domain_score": 50,
+                "overlap": 15
+              },
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "... sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present.\" Poivre d'Arvor said the initial ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "https://www.msn.com/en-us/politics/international-relations/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=BingNewsSerp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
+                "title": "Europe allies begin Greenland military mission as Trump ...",
+                "snippet": "... Poivre d'Arvor, who saw it as sending a strong political signal. 11 ... \"This is a first exercise... we'll show the US that Nato is present ...",
+                "domain": "msn.com",
+                "base_domain": "msn.com",
+                "domain_score": 50,
+                "overlap": 11
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "SUPPORTED",
+            "adjusted_confidence": 0.72,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 30,
+                "require_independent_domains": false,
+                "min_overlap": 4
+              },
+              "filtered_evidence_count": 3,
+              "distinct_base_domains": 3,
+              "strong_base_domains": [
+                "aol.com",
+                "bbc.com",
+                "msn.com"
+              ],
+              "top_sources": [
+                {
+                  "base_domain": "aol.com",
+                  "domain_score": 50,
+                  "overlap": 15,
+                  "weight": 0.269,
+                  "url": "https://www.aol.com/news/europe-allies-begin-greenland-military-115318741.html"
+                },
+                {
+                  "base_domain": "bbc.com",
+                  "domain_score": 50,
+                  "overlap": 11,
+                  "weight": 0.269,
+                  "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo"
+                },
+                {
+                  "base_domain": "msn.com",
+                  "domain_score": 50,
+                  "overlap": 11,
+                  "weight": 0.269,
+                  "url": "https://www.msn.com/en-us/politics/international-relations/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=BingNewsSerp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1"
+                }
+              ],
+              "reason": "Credible, independent sources show strong claim overlap."
+            }
+          }
+        ],
+        "timestamp_utc": "2026-01-20T09:35:55.285996Z",
+        "metadata": {
+          "mode": "live",
+          "final_url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+          "extraction_success": true,
+          "claims_extracted": 3,
+          "serpapi_enabled": true,
+          "domain_score_reasons": {},
+          "verifier": "baseline",
+          "step11_policy": {
+            "min_source_score": 30,
+            "require_independent_domains": false,
+            "min_overlap": 4,
+            "max_sources_per_base_domain": 2,
+            "enable_weighted_confidence": true
+          },
+          "note": "Step 11 enabled: credibility-weighted aggregation + independence constraints.",
+          "run_id": 25
+        }
+      }
+    },
+    {
+      "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+      "policy": {
+        "name": "P1_default",
+        "min_source_score": 50,
+        "require_independent_domains": true,
+        "min_overlap": 6
+      },
+      "response": {
+        "input_type": "url",
+        "domain": "bbc.com",
+        "extracted_text_chars": 6326,
+        "extracted_text_preview": "European military personnel arrive in Greenland as Trump says US needs island A small French military contingent has arrived in Greenland's capital Nuuk, officials say, as several European states deploy small numbers in a so-called reconnaissance mission. The limited deployment, which also involves Germany, Sweden, Norway, Finland, the Netherlands and the UK, comes as US President Donald Trump con",
+        "domain_score": 50,
+        "domain_label": "MEDIUM",
+        "final_misinformation_likelihood": 0.29,
+        "claims": [
+          {
+            "claim_text": "Germany was sending an A400M transport plane to Nuuk on Thursday with a contingent of 13 soldiers, although officials said they would stay in Greenland only until Saturday.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "Germany was sending an A400M transport plane to Nuuk on Thursday with a contingent of 13 soldiers, although officials said they would stay in ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 14
+              },
+              {
+                "url": "https://www.arise.tv/european-troops-deploy-to-greenland-as-trump-insists-us-needs-island/",
+                "title": "European Troops Deploy To Greenland As Trump Insists ...",
+                "snippet": "Germany confirmed it was sending an A400M transport aircraft to Nuuk with 13 soldiers, though officials said they would remain in Greenland ...",
+                "domain": "arise.tv",
+                "base_domain": "arise.tv",
+                "domain_score": 50,
+                "overlap": 10
+              },
+              {
+                "url": "https://www.ir-ia.com/news/european-military-contingents-arrive-in-greenland-as-denmark-pushes-back-against-us-pressure/",
+                "title": "European military contingents arrive in Greenland as ...",
+                "snippet": "A German A400M transport aircraft was scheduled to fly the contingent to Nuuk, although officials stressed that the soldiers would remain on the ...",
+                "domain": "ir-ia.com",
+                "base_domain": "ir-ia.com",
+                "domain_score": 50,
+                "overlap": 8
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "SUPPORTED",
+            "adjusted_confidence": 0.72,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 50,
+                "require_independent_domains": true,
+                "min_overlap": 6
+              },
+              "filtered_evidence_count": 3,
+              "distinct_base_domains": 3,
+              "strong_base_domains": [
+                "bbc.com",
+                "arise.tv",
+                "ir-ia.com"
+              ],
+              "top_sources": [
+                {
+                  "base_domain": "bbc.com",
+                  "domain_score": 50,
+                  "overlap": 14,
+                  "weight": 0.269,
+                  "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo"
+                },
+                {
+                  "base_domain": "arise.tv",
+                  "domain_score": 50,
+                  "overlap": 10,
+                  "weight": 0.269,
+                  "url": "https://www.arise.tv/european-troops-deploy-to-greenland-as-trump-insists-us-needs-island/"
+                },
+                {
+                  "base_domain": "ir-ia.com",
+                  "domain_score": 50,
+                  "overlap": 8,
+                  "weight": 0.269,
+                  "url": "https://www.ir-ia.com/news/european-military-contingents-arrive-in-greenland-as-denmark-pushes-back-against-us-pressure/"
+                }
+              ],
+              "reason": "Credible, independent sources show strong claim overlap."
+            }
+          },
+          {
+            "claim_text": "The US already has a military base in Greenland, currently staffed by up to 150 people, and has the option of bringing in far greater numbers under existing agreements with Copenhagen.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "The US already has a military base in Greenland, currently staffed by up to 150 people, and has the option of bringing in far greater numbers ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "http://www.msn.com/en-us/news/world/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=ientp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
+                "title": "Europe allies begin Greenland military mission as Trump ...",
+                "snippet": "... 150 people, and has the option of bringing in far greater numbers under existing agreements with Copenhagen. But the Danish-led initiative is ...",
+                "domain": "msn.com",
+                "base_domain": "msn.com",
+                "domain_score": 50,
+                "overlap": 9
+              },
+              {
+                "url": "https://www.usatoday.com/story/news/nation/2026/01/15/trump-military-greenland-pituffik-space-base/88201534007/",
+                "title": "Greenland's only US military base is (quietly) getting a ...",
+                "snippet": "Today, about 150 American military personnel are stationed at the Cold War-era base formerly known at Thule Air Force Base, joined by hundreds ...",
+                "domain": "usatoday.com",
+                "base_domain": "usatoday.com",
+                "domain_score": 50,
+                "overlap": 2
+              },
+              {
+                "url": "https://www.history.com/articles/1951-agreement-that-allows-us-military-presence-in-greenland",
+                "title": "The 1951 Agreement Allowing US Military in Greenland",
+                "snippet": "The 1951 Defense of Greenland agreement granted the U.S. the right to expand its military presence in Greenland far beyond World War II levels.",
+                "domain": "history.com",
+                "base_domain": "history.com",
+                "domain_score": 50,
+                "overlap": 2
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "SUPPORTED",
+            "adjusted_confidence": 0.72,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 50,
+                "require_independent_domains": true,
+                "min_overlap": 6
+              },
+              "filtered_evidence_count": 4,
+              "distinct_base_domains": 4,
+              "strong_base_domains": [
+                "bbc.com",
+                "msn.com"
+              ],
+              "top_sources": [
+                {
+                  "base_domain": "bbc.com",
+                  "domain_score": 50,
+                  "overlap": 11,
+                  "weight": 0.269,
+                  "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo"
+                },
+                {
+                  "base_domain": "msn.com",
+                  "domain_score": 50,
+                  "overlap": 9,
+                  "weight": 0.269,
+                  "url": "http://www.msn.com/en-us/news/world/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=ientp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1"
+                },
+                {
+                  "base_domain": "usatoday.com",
+                  "domain_score": 50,
+                  "overlap": 2,
+                  "weight": 0.09,
+                  "url": "https://www.usatoday.com/story/news/nation/2026/01/15/trump-military-greenland-pituffik-space-base/88201534007/"
+                },
+                {
+                  "base_domain": "history.com",
+                  "domain_score": 50,
+                  "overlap": 2,
+                  "weight": 0.09,
+                  "url": "https://www.history.com/articles/1951-agreement-that-allows-us-military-presence-in-greenland"
+                }
+              ],
+              "reason": "Credible, independent sources show strong claim overlap."
+            }
+          },
+          {
+            "claim_text": "Senior diplomat Olivier Poivre d'Arvor saw the mission as sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present.\"",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.aol.com/news/europe-allies-begin-greenland-military-115318741.html",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "Senior diplomat Olivier Poivre d'Arvor saw the mission as sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present ...",
+                "domain": "aol.com",
+                "base_domain": "aol.com",
+                "domain_score": 50,
+                "overlap": 15
+              },
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "... sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present.\" Poivre d'Arvor said the initial ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "https://www.msn.com/en-us/politics/international-relations/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=BingNewsSerp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
+                "title": "Europe allies begin Greenland military mission as Trump ...",
+                "snippet": "... Poivre d'Arvor, who saw it as sending a strong political signal. 11 ... \"This is a first exercise... we'll show the US that Nato is present ...",
+                "domain": "msn.com",
+                "base_domain": "msn.com",
+                "domain_score": 50,
+                "overlap": 11
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "SUPPORTED",
+            "adjusted_confidence": 0.72,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 50,
+                "require_independent_domains": true,
+                "min_overlap": 6
+              },
+              "filtered_evidence_count": 3,
+              "distinct_base_domains": 3,
+              "strong_base_domains": [
+                "aol.com",
+                "bbc.com",
+                "msn.com"
+              ],
+              "top_sources": [
+                {
+                  "base_domain": "aol.com",
+                  "domain_score": 50,
+                  "overlap": 15,
+                  "weight": 0.269,
+                  "url": "https://www.aol.com/news/europe-allies-begin-greenland-military-115318741.html"
+                },
+                {
+                  "base_domain": "bbc.com",
+                  "domain_score": 50,
+                  "overlap": 11,
+                  "weight": 0.269,
+                  "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo"
+                },
+                {
+                  "base_domain": "msn.com",
+                  "domain_score": 50,
+                  "overlap": 11,
+                  "weight": 0.269,
+                  "url": "https://www.msn.com/en-us/politics/international-relations/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=BingNewsSerp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1"
+                }
+              ],
+              "reason": "Credible, independent sources show strong claim overlap."
+            }
+          }
+        ],
+        "timestamp_utc": "2026-01-20T09:36:05.323428Z",
+        "metadata": {
+          "mode": "live",
+          "final_url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+          "extraction_success": true,
+          "claims_extracted": 3,
+          "serpapi_enabled": true,
+          "domain_score_reasons": {},
+          "verifier": "baseline",
+          "step11_policy": {
+            "min_source_score": 50,
+            "require_independent_domains": true,
+            "min_overlap": 6,
+            "max_sources_per_base_domain": 2,
+            "enable_weighted_confidence": true
+          },
+          "note": "Step 11 enabled: credibility-weighted aggregation + independence constraints.",
+          "run_id": 26
+        }
+      }
+    },
+    {
+      "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+      "policy": {
+        "name": "P2_strict",
+        "min_source_score": 70,
+        "require_independent_domains": true,
+        "min_overlap": 7
+      },
+      "response": {
+        "input_type": "url",
+        "domain": "bbc.com",
+        "extracted_text_chars": 6326,
+        "extracted_text_preview": "European military personnel arrive in Greenland as Trump says US needs island A small French military contingent has arrived in Greenland's capital Nuuk, officials say, as several European states deploy small numbers in a so-called reconnaissance mission. The limited deployment, which also involves Germany, Sweden, Norway, Finland, the Netherlands and the UK, comes as US President Donald Trump con",
+        "domain_score": 50,
+        "domain_label": "MEDIUM",
+        "final_misinformation_likelihood": 0.5,
+        "claims": [
+          {
+            "claim_text": "Germany was sending an A400M transport plane to Nuuk on Thursday with a contingent of 13 soldiers, although officials said they would stay in Greenland only until Saturday.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "Germany was sending an A400M transport plane to Nuuk on Thursday with a contingent of 13 soldiers, although officials said they would stay in ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 14
+              },
+              {
+                "url": "https://www.arise.tv/european-troops-deploy-to-greenland-as-trump-insists-us-needs-island/",
+                "title": "European Troops Deploy To Greenland As Trump Insists ...",
+                "snippet": "Germany confirmed it was sending an A400M transport aircraft to Nuuk with 13 soldiers, though officials said they would remain in Greenland ...",
+                "domain": "arise.tv",
+                "base_domain": "arise.tv",
+                "domain_score": 50,
+                "overlap": 10
+              },
+              {
+                "url": "https://www.ir-ia.com/news/european-military-contingents-arrive-in-greenland-as-denmark-pushes-back-against-us-pressure/",
+                "title": "European military contingents arrive in Greenland as ...",
+                "snippet": "How long the forces will remain in Greenland remains unclear. German officials said their contingent would stay only a few days, while others ...",
+                "domain": "ir-ia.com",
+                "base_domain": "ir-ia.com",
+                "domain_score": 50,
+                "overlap": 7
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.56,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 70,
+                "require_independent_domains": true,
+                "min_overlap": 7
+              },
+              "filtered_evidence_count": 0,
+              "distinct_base_domains": 0,
+              "top_sources": [],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "The US already has a military base in Greenland, currently staffed by up to 150 people, and has the option of bringing in far greater numbers under existing agreements with Copenhagen.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "The US already has a military base in Greenland, currently staffed by up to 150 people, and has the option of bringing in far greater numbers ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "http://www.msn.com/en-us/news/world/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=ientp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
+                "title": "Europe allies begin Greenland military mission as Trump ...",
+                "snippet": "... 150 people, and has the option of bringing in far greater numbers under existing agreements with Copenhagen. But the Danish-led initiative is ...",
+                "domain": "msn.com",
+                "base_domain": "msn.com",
+                "domain_score": 50,
+                "overlap": 9
+              },
+              {
+                "url": "https://www.usatoday.com/story/news/nation/2026/01/15/trump-military-greenland-pituffik-space-base/88201534007/",
+                "title": "Greenland's only US military base is (quietly) getting a ...",
+                "snippet": "Today, about 150 American military personnel are stationed at the Cold War-era base formerly known at Thule Air Force Base, joined by hundreds ...",
+                "domain": "usatoday.com",
+                "base_domain": "usatoday.com",
+                "domain_score": 50,
+                "overlap": 2
+              },
+              {
+                "url": "https://www.history.com/articles/1951-agreement-that-allows-us-military-presence-in-greenland",
+                "title": "The 1951 Agreement Allowing US Military in Greenland",
+                "snippet": "The 1951 Defense of Greenland agreement granted the U.S. the right to expand its military presence in Greenland far beyond World War II levels.",
+                "domain": "history.com",
+                "base_domain": "history.com",
+                "domain_score": 50,
+                "overlap": 2
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.56,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 70,
+                "require_independent_domains": true,
+                "min_overlap": 7
+              },
+              "filtered_evidence_count": 0,
+              "distinct_base_domains": 0,
+              "top_sources": [],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "Senior diplomat Olivier Poivre d'Arvor saw the mission as sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present.\"",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.aol.com/news/europe-allies-begin-greenland-military-115318741.html",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "Senior diplomat Olivier Poivre d'Arvor saw the mission as sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present ...",
+                "domain": "aol.com",
+                "base_domain": "aol.com",
+                "domain_score": 50,
+                "overlap": 15
+              },
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "... sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present.\" Poivre d'Arvor said the initial ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "https://www.msn.com/en-us/politics/international-relations/europe-allies-begin-greenland-military-mission-as-trump-says-us-needs-island/ar-AA1UgTRI?ocid=BingNewsSerp&apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
+                "title": "Europe allies begin Greenland military mission as Trump ...",
+                "snippet": "... Poivre d'Arvor, who saw it as sending a strong political signal. 11 ... \"This is a first exercise... we'll show the US that Nato is present ...",
+                "domain": "msn.com",
+                "base_domain": "msn.com",
+                "domain_score": 50,
+                "overlap": 11
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.56,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 70,
+                "require_independent_domains": true,
+                "min_overlap": 7
+              },
+              "filtered_evidence_count": 0,
+              "distinct_base_domains": 0,
+              "top_sources": [],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          }
+        ],
+        "timestamp_utc": "2026-01-20T09:36:11.669856Z",
+        "metadata": {
+          "mode": "live",
+          "final_url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+          "extraction_success": true,
+          "claims_extracted": 3,
+          "serpapi_enabled": true,
+          "domain_score_reasons": {},
+          "verifier": "baseline",
+          "step11_policy": {
+            "min_source_score": 70,
+            "require_independent_domains": true,
+            "min_overlap": 7,
+            "max_sources_per_base_domain": 2,
+            "enable_weighted_confidence": true
+          },
+          "note": "Step 11 enabled: credibility-weighted aggregation + independence constraints.",
+          "run_id": 27
+        }
+      }
+    },
+    {
+      "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+      "policy": {
+        "name": "P3_very_strict",
+        "min_source_score": 80,
+        "require_independent_domains": true,
+        "min_overlap": 8
+      },
+      "response": {
+        "input_type": "url",
+        "domain": "bbc.com",
+        "extracted_text_chars": 6326,
+        "extracted_text_preview": "European military personnel arrive in Greenland as Trump says US needs island A small French military contingent has arrived in Greenland's capital Nuuk, officials say, as several European states deploy small numbers in a so-called reconnaissance mission. The limited deployment, which also involves Germany, Sweden, Norway, Finland, the Netherlands and the UK, comes as US President Donald Trump con",
+        "domain_score": 50,
+        "domain_label": "MEDIUM",
+        "final_misinformation_likelihood": 0.5,
+        "claims": [
+          {
+            "claim_text": "Germany was sending an A400M transport plane to Nuuk on Thursday with a contingent of 13 soldiers, although officials said they would stay in Greenland only until Saturday.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "Germany was sending an A400M transport plane to Nuuk on Thursday with a contingent of 13 soldiers, although officials said they would stay in ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 14
+              },
+              {
+                "url": "https://www.arise.tv/european-troops-deploy-to-greenland-as-trump-insists-us-needs-island/",
+                "title": "European Troops Deploy To Greenland As Trump Insists ...",
+                "snippet": "Germany confirmed it was sending an A400M transport aircraft to Nuuk with 13 soldiers, though officials said they would remain in Greenland ...",
+                "domain": "arise.tv",
+                "base_domain": "arise.tv",
+                "domain_score": 50,
+                "overlap": 10
+              },
+              {
+                "url": "https://www.ir-ia.com/news/european-military-contingents-arrive-in-greenland-as-denmark-pushes-back-against-us-pressure/",
+                "title": "European military contingents arrive in Greenland as ...",
+                "snippet": "How long the forces will remain in Greenland remains unclear. German officials said their contingent would stay only a few days, while others ...",
+                "domain": "ir-ia.com",
+                "base_domain": "ir-ia.com",
+                "domain_score": 50,
+                "overlap": 7
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.56,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 80,
+                "require_independent_domains": true,
+                "min_overlap": 8
+              },
+              "filtered_evidence_count": 0,
+              "distinct_base_domains": 0,
+              "top_sources": [],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "The US already has a military base in Greenland, currently staffed by up to 150 people, and has the option of bringing in far greater numbers under existing agreements with Copenhagen.",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "The US already has a military base in Greenland, currently staffed by up to 150 people, and has the option of bringing in far greater numbers ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "https://www.history.com/articles/1951-agreement-that-allows-us-military-presence-in-greenland",
+                "title": "The 1951 Agreement Allowing US Military in Greenland",
+                "snippet": "The 1951 Defense of Greenland agreement granted the U.S. the right to expand its military presence in Greenland far beyond World War II levels.",
+                "domain": "history.com",
+                "base_domain": "history.com",
+                "domain_score": 50,
+                "overlap": 2
+              },
+              {
+                "url": "https://www.usatoday.com/story/news/nation/2026/01/15/trump-military-greenland-pituffik-space-base/88201534007/",
+                "title": "Greenland's only US military base is (quietly) getting a ...",
+                "snippet": "Today, about 150 American military personnel are stationed at the Cold War-era base formerly known at Thule Air Force Base, joined by hundreds ...",
+                "domain": "usatoday.com",
+                "base_domain": "usatoday.com",
+                "domain_score": 50,
+                "overlap": 2
+              },
+              {
+                "url": "https://www.nytimes.com/2026/01/07/world/europe/trump-greenland-denmark-us-defense-pact.html",
+                "title": "Buy Greenland? Take It? Why? An Old Pact Already Gives ...",
+                "snippet": "Analysts say the Cold War agreement allows the president to increase the American military presence almost at will.",
+                "domain": "nytimes.com",
+                "base_domain": "nytimes.com",
+                "domain_score": 50,
+                "overlap": 1
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.56,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 80,
+                "require_independent_domains": true,
+                "min_overlap": 8
+              },
+              "filtered_evidence_count": 0,
+              "distinct_base_domains": 0,
+              "top_sources": [],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          },
+          {
+            "claim_text": "Senior diplomat Olivier Poivre d'Arvor saw the mission as sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present.\"",
+            "verdict": "NEI",
+            "confidence": 0.56,
+            "evidence": [
+              {
+                "url": "https://www.aol.com/news/europe-allies-begin-greenland-military-115318741.html",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "Senior diplomat Olivier Poivre d'Arvor saw the mission as sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present ...",
+                "domain": "aol.com",
+                "base_domain": "aol.com",
+                "domain_score": 50,
+                "overlap": 15
+              },
+              {
+                "url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "... sending a strong political signal: \"This is a first exercise... we'll show the US that Nato is present.\" Poivre d'Arvor said the initial ...",
+                "domain": "bbc.com",
+                "base_domain": "bbc.com",
+                "domain_score": 50,
+                "overlap": 11
+              },
+              {
+                "url": "https://ednews.net/en/news/world/712201-european-military-personnel-arrive-greenland",
+                "title": "European military personnel arrive in Greenland as Trump ...",
+                "snippet": "... signal: \"This is a first exercise... we'll show the US that Nato is present.\" The movement of military personnel comes after Denmark and ...",
+                "domain": "ednews.net",
+                "base_domain": "ednews.net",
+                "domain_score": 50,
+                "overlap": 6
+              }
+            ],
+            "debate_summary": "Evidence retrieved but insufficient strength for a decision (baseline).",
+            "adjusted_verdict": "NEI",
+            "adjusted_confidence": 0.56,
+            "evidence_summary": {
+              "policy": {
+                "min_source_score": 80,
+                "require_independent_domains": true,
+                "min_overlap": 8
+              },
+              "filtered_evidence_count": 0,
+              "distinct_base_domains": 0,
+              "top_sources": [],
+              "reason": "Not enough strong independent credible evidence after filtering."
+            }
+          }
+        ],
+        "timestamp_utc": "2026-01-20T09:36:21.907440Z",
+        "metadata": {
+          "mode": "live",
+          "final_url": "https://www.bbc.com/news/articles/cd0ydjvxpejo",
+          "extraction_success": true,
+          "claims_extracted": 3,
+          "serpapi_enabled": true,
+          "domain_score_reasons": {},
+          "verifier": "baseline",
+          "step11_policy": {
+            "min_source_score": 80,
+            "require_independent_domains": true,
+            "min_overlap": 8,
+            "max_sources_per_base_domain": 2,
+            "enable_weighted_confidence": true
+          },
+          "note": "Step 11 enabled: credibility-weighted aggregation + independence constraints.",
+          "run_id": 28
+        }
+      }
+    }
+  ]
+}
