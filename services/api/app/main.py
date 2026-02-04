@@ -7,7 +7,6 @@ from datetime import datetime
 from urllib.parse import urlparse
 import os
 import re
-import json
 
 import httpx
 import trafilatura
@@ -19,6 +18,9 @@ from nltk.tokenize import sent_tokenize
 
 from app.credibility import score_domain_rubric
 from app.storage import save_run, list_runs, get_run, export_runs
+from app.debate import llm_debate_verdict
+
+ 
 
 # Load environment variables early
 load_dotenv()
@@ -45,20 +47,18 @@ def _ensure_nltk():
 
 _ensure_nltk()
 
-app = FastAPI(title="Fact Validator API", version="0.8.1")
+app = FastAPI(title="Fact Validator API", version="0.8.2")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3001",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+
 
 
 # ----------------------------
@@ -69,11 +69,18 @@ class AnalyzeRequest(BaseModel):
     url: Optional[str] = None
     text: Optional[str] = None
     mode: Literal["live", "snapshot"] = "live"
-    verifier: Literal["baseline", "debate"] = "baseline"  # debate is skipped for now
-    max_debate_claims: int = 2
+    verifier: Literal["baseline", "debate"] = "baseline"  # debate can fallback
+
+    # optional Step 11 knobs (safe if unused by UI)
+    enable_weighted_confidence: bool = False
+    min_source_score: int = 50
+    require_independent_domains: bool = True
+    min_overlap: int = 6
+    max_sources_per_base_domain: int = 2
 
     max_claims: int = 6
     max_evidence_per_claim: int = 5
+    max_debate_claims: int = 2
 
 
 class EvidenceItem(BaseModel):
@@ -91,6 +98,11 @@ class ClaimResult(BaseModel):
     confidence: float
     evidence: List[EvidenceItem]
     debate_summary: Optional[str] = None
+
+    # optional Step 11 outputs
+    adjusted_verdict: Optional[Literal["SUPPORTED", "REFUTED", "NEI"]] = None
+    adjusted_confidence: Optional[float] = None
+    evidence_summary: Optional[Dict[str, Any]] = None
 
 
 class AnalyzeResponse(BaseModel):
@@ -157,7 +169,7 @@ def is_blocked_domain(domain: str) -> bool:
 async def fetch_html(url: str) -> Tuple[str, str]:
     try:
         headers = {
-            "User-Agent": "FactValidatorBot/0.8.1 (thesis demo)",
+            "User-Agent": "FactValidatorBot/0.8.2 (thesis demo)",
             "Accept": "text/html,application/xhtml+xml",
         }
         timeout = httpx.Timeout(connect=20.0, read=30.0, write=20.0, pool=30.0)
@@ -360,6 +372,14 @@ def estimate_misinformation_likelihood(claims: List[ClaimResult]) -> float:
     return float(max(0.05, min(score, 0.95)))
 
 
+def _label(score: int) -> str:
+    if score >= 80:
+        return "HIGH"
+    if score >= 50:
+        return "MEDIUM"
+    return "LOW"
+
+
 # ----------------------------
 # Routes
 # ----------------------------
@@ -428,16 +448,20 @@ async def analyze(req: AnalyzeRequest):
     chars = len(extracted_text)
 
     claim_texts = extract_claim_candidates(extracted_text, max_claims=req.max_claims)
-    claims: List[Dict[str, Any]] = []
 
-    debate_meta: Dict[str, Any] = {"enabled": req.verifier == "debate", "claims_debated": 0, "items": []}
+    claims: List[Dict[str, Any]] = []
+    debate_meta: Dict[str, Any] = {
+        "enabled": req.verifier == "debate",
+        "claims_debated": 0,
+        "max_debate_claims": int(req.max_debate_claims),
+        "items": [],
+    }
 
     for ct in claim_texts:
         raw_results = await serpapi_search(ct[:220], num=req.max_evidence_per_claim)
 
         ev_items: List[Dict[str, Any]] = []
-        seen_domains = set()
-
+        seen_base_domains = {}
         for rr in raw_results:
             link = rr.get("link") or ""
             dom = domain_from_any_url(link)
@@ -447,9 +471,12 @@ async def analyze(req: AnalyzeRequest):
                 continue
             if is_blocked_domain(dom):
                 continue
-            if bd in seen_domains:
+
+            # limit per base domain
+            seen_base_domains.setdefault(bd, 0)
+            if seen_base_domains[bd] >= max(1, int(req.max_sources_per_base_domain)):
                 continue
-            seen_domains.add(bd)
+            seen_base_domains[bd] += 1
 
             snippet = (rr.get("snippet") or "").strip()
             if len(snippet) < 40:
@@ -464,33 +491,115 @@ async def analyze(req: AnalyzeRequest):
                     "title": rr.get("title"),
                     "snippet": snippet,
                     "domain": dom,
-                    "domain_score": cred.score,
-                    "overlap": ov,
+                    "domain_score": int(cred.score),
+                    "overlap": int(ov),
+                    "base_domain": bd,
                 }
             )
 
+        # credibility-first sorting
         ev_items.sort(key=lambda e: (e["domain_score"], e["overlap"]), reverse=True)
 
-        ev_for_verdict = [EvidenceItem(**e) for e in ev_items]
+        # baseline verdict uses all evidence (always computed as fallback)
+        ev_for_baseline = [
+            EvidenceItem(**{k: v for k, v in e.items() if k in EvidenceItem.model_fields})
+            for e in ev_items
+        ]
+        verdict, conf, summary = baseline_verdict(ct, ev_for_baseline)
 
-        verdict, conf, summary = baseline_verdict(ct, ev_for_verdict)
-        if req.verifier == "debate":
-            summary = summary + " | Debate skipped for now; baseline verifier active."
+        # Step 11: adjusted verdict (optional)
+        adjusted_verdict = None
+        adjusted_conf = None
+        evidence_summary = None
+
+        if req.enable_weighted_confidence:
+            filtered = [
+                e for e in ev_items
+                if int(e["domain_score"]) >= int(req.min_source_score) and int(e["overlap"]) >= int(req.min_overlap)
+            ]
+            strong_domains = sorted({e["base_domain"] for e in filtered})
+            distinct_domains = len(strong_domains)
+
+            reason = "ok"
+            if not filtered:
+                reason = "no_evidence_after_filters"
+            if req.require_independent_domains and distinct_domains < 2:
+                reason = "insufficient_independent_domains"
+
+            # re-run baseline decision on filtered list
+            ev_for_adjusted = [EvidenceItem(**{k: v for k, v in e.items() if k in EvidenceItem.model_fields}) for e in filtered]
+            av, ac, atext = baseline_verdict(ct, ev_for_adjusted)
+
+            # enforce independence if requested
+            if req.require_independent_domains and distinct_domains < 2:
+                av = "NEI"
+                ac = max(0.50, float(ac))
+                atext = atext + " | independence constraint triggered"
+
+            adjusted_verdict = av
+            adjusted_conf = round(float(ac), 2)
+            evidence_summary = {
+                "min_source_score": int(req.min_source_score),
+                "min_overlap": int(req.min_overlap),
+                "require_independent_domains": bool(req.require_independent_domains),
+                "distinct_base_domains": distinct_domains,
+                "strong_base_domains": strong_domains,
+                "reason": reason,
+                "note": atext,
+            }
+
+        # Optional LLM debate verifier (PROVER vs SKEPTIC vs JUDGE)
+        debate_summary: Optional[str] = summary
+        if req.verifier == "debate" and ev_items and debate_meta["claims_debated"] < req.max_debate_claims:
+            try:
+                d_verdict, d_conf, d_summary, d_debug = await llm_debate_verdict(
+                    claim_text=ct,
+                    evidence_items=ev_items,
+                )
+                # If debate returns a sensible verdict, prefer it; otherwise keep baseline.
+                verdict = d_verdict or verdict
+                conf = float(d_conf) if d_conf is not None else conf
+                debate_summary = d_summary or summary
+
+                debate_meta["claims_debated"] += 1
+                debate_meta["items"].append(
+                    {
+                        "claim_text": ct,
+                        "verdict": d_verdict,
+                        "confidence": d_conf,
+                        "summary": d_summary,
+                        "debug": d_debug,
+                    }
+                )
+            except Exception as e:
+                # If Ollama debate fails, fall back to baseline and record minimal error info.
+                debate_meta["items"].append(
+                    {
+                        "claim_text": ct,
+                        "error": str(e),
+                        "note": "Debate verifier failed; baseline verdict used.",
+                    }
+                )
+                debate_summary = summary
 
         claims.append(
             {
                 "claim_text": ct,
                 "verdict": verdict,
                 "confidence": round(float(conf), 2),
-                "evidence": ev_items,
-                "debate_summary": summary,
+                "evidence": [{k: v for k, v in e.items() if k != "base_domain"} for e in ev_items],
+                "debate_summary": debate_summary,
+                "adjusted_verdict": adjusted_verdict,
+                "adjusted_confidence": adjusted_conf,
+                "evidence_summary": evidence_summary,
             }
         )
 
+    # input domain score
     if domain:
         input_cred = score_domain_rubric(domain)
-        input_domain_score = input_cred.score
-        input_domain_label = input_cred.label
+        input_domain_score = int(input_cred.score)
+        input_domain_label = str(input_cred.label)
         input_domain_reasons = input_cred.reasons
     else:
         input_domain_score = 65
@@ -506,7 +615,7 @@ async def analyze(req: AnalyzeRequest):
         "extracted_text_preview": preview,
         "domain_score": input_domain_score,
         "domain_label": input_domain_label,
-        "final_misinformation_likelihood": round(final_like, 2),
+        "final_misinformation_likelihood": round(float(final_like), 2),
         "claims": claims,
         "timestamp_utc": datetime.utcnow().isoformat() + "Z",
         "metadata": {
