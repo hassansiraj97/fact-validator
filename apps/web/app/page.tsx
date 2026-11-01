@@ -1,92 +1,160 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { cx } from "../components/ui";
+import { API_BASE } from "../components/api";
 
-type RunItem = {
-  id: number;
-  created_at_utc: string;
-  input_type: string;
-  domain?: string | null;
-  url?: string | null;
-  mode?: string | null;
-  verifier?: string | null;
+type EvidenceItem = {
+  url: string;
+  snippet?: string;
+  domain?: string;
+  domain_score?: number;
+  overlap?: number;
+  title?: string;
 };
 
-function labelFromScore(score: number): "HIGH" | "MEDIUM" | "LOW" {
-  if (score >= 80) return "HIGH";
-  if (score >= 50) return "MEDIUM";
-  return "LOW";
+type ToulminArg = {
+  role?: string;
+  attack_type?: string;
+  datum?: string;
+  warrant?: string;
+  claim?: string;
+  confidence?: number;
+};
+
+type DebateInfo = {
+  prover?: ToulminArg | null;
+  skeptic?: ToulminArg | null;
+  judge?: any;
+  accepted_arguments?: string[];
+  defeated_arguments?: string[];
+  model?: string;
+  error?: string;
+};
+
+type ClaimItem = {
+  claim_text: string;
+  verdict: "SUPPORTED" | "REFUTED" | "NEI" | string;
+  confidence: number;
+  verdict_source?: string;
+  debate_summary?: string;
+  evidence: EvidenceItem[];
+  excluded_evidence?: { domain: string; url: string; reason: string }[];
+  debate?: DebateInfo | null;
+  adjusted_verdict?: string | null;
+  adjusted_confidence?: number | null;
+  evidence_summary?: { reason?: string; distinct_base_domains?: number } | null;
+};
+
+type AnalyzeResponse = {
+  input_type: "url" | "text" | string;
+  domain?: string;
+  extracted_text_chars?: number;
+  extracted_text_preview?: string;
+  domain_score?: number;
+  domain_label?: string;
+  final_misinformation_likelihood?: number;
+  claims?: ClaimItem[];
+  timestamp_utc?: string;
+  metadata?: any;
+};
+
+type RunRow = {
+  id: number | string;
+  created_utc?: string;
+  input_type?: string;
+  verifier?: string;
+  domain?: string;
+  url?: string;
+};
+
+function verdictClass(v?: string | null) {
+  const u = (v || "").toUpperCase();
+  if (u === "SUPPORTED") return "bg-emerald-400/15 border-emerald-300/30 text-emerald-200";
+  if (u === "REFUTED") return "bg-rose-400/15 border-rose-300/30 text-rose-200";
+  return "bg-amber-400/15 border-amber-300/30 text-amber-200";
 }
 
-function badgeClass(label: string) {
-  if (label === "HIGH") return "bg-green-100 text-green-800 border-green-300";
-  if (label === "MEDIUM") return "bg-yellow-100 text-yellow-800 border-yellow-300";
-  return "bg-red-100 text-red-800 border-red-300";
-}
-
-function SourceBadge({ score }: { score: number }) {
-  const label = labelFromScore(score);
+function ArgBox({ title, arg }: { title: string; arg?: ToulminArg | null }) {
+  if (!arg || typeof arg !== "object") return null;
   return (
-    <span className={`text-[11px] px-2 py-[2px] border rounded ${badgeClass(label)}`}>
-      {label} {score}
-    </span>
+    <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm">
+      <div className="text-xs font-semibold text-white/70">
+        {title}
+        {arg.attack_type ? ` · ${arg.attack_type}` : ""}
+        {typeof arg.confidence === "number" ? ` · ${Math.round(arg.confidence * 100)}%` : ""}
+      </div>
+      {arg.datum && (
+        <div className="mt-1">
+          <span className="text-white/50">Datum:</span> {arg.datum}
+        </div>
+      )}
+      {arg.warrant && (
+        <div className="mt-1">
+          <span className="text-white/50">Warrant:</span> {arg.warrant}
+        </div>
+      )}
+      {arg.claim && (
+        <div className="mt-1">
+          <span className="text-white/50">Claim:</span> {arg.claim}
+        </div>
+      )}
+    </div>
   );
 }
 
-function VerdictPill({ v, c }: { v: string; c?: number }) {
-  const color =
-    v === "SUPPORTED"
-      ? "bg-green-100 text-green-800 border-green-300"
-      : v === "REFUTED"
-      ? "bg-red-100 text-red-800 border-red-300"
-      : "bg-gray-100 text-gray-800 border-gray-300";
-  return (
-    <span className={`text-xs px-2 py-1 border rounded ${color}`}>
-      {v}{typeof c === "number" ? ` (${c})` : ""}
-    </span>
-  );
+function fmtPct(x?: number) {
+  if (typeof x !== "number") return "—";
+  const v = Math.max(0, Math.min(1, x));
+  return `${Math.round(v * 100)}%`;
 }
 
-export default function Home() {
-  const API = "http://127.0.0.1:8000";
+function safeHostFromUrl(u?: string) {
+  try {
+    if (!u) return "—";
+    return new URL(u).hostname;
+  } catch {
+    return "—";
+  }
+}
 
+function sortEvidence(evs: EvidenceItem[]) {
+  return [...(evs || [])].sort((a, b) => {
+    const sa = typeof a.domain_score === "number" ? a.domain_score : 0;
+    const sb = typeof b.domain_score === "number" ? b.domain_score : 0;
+    if (sb !== sa) return sb - sa;
+    const da = (a.domain ?? safeHostFromUrl(a.url)).length;
+    const db = (b.domain ?? safeHostFromUrl(b.url)).length;
+    return da - db;
+  });
+}
+
+export default function Page() {
+  const [tab, setTab] = useState<"url" | "text">("url");
   const [url, setUrl] = useState("");
   const [text, setText] = useState("");
-  const [mode, setMode] = useState<"live" | "snapshot">("live");
+
+  const [strictPolicy, setStrictPolicy] = useState(false);
   const [verifier, setVerifier] = useState<"baseline" | "debate">("baseline");
 
-  // Step 11 controls
-  const [minSourceScore, setMinSourceScore] = useState<number>(50);
-  const [requireIndependent, setRequireIndependent] = useState<boolean>(true);
-  const [minOverlap, setMinOverlap] = useState<number>(6);
-  const [maxPerBase, setMaxPerBase] = useState<number>(2);
-  const [enableWeighted, setEnableWeighted] = useState<boolean>(true);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [maxClaims, setMaxClaims] = useState(6);
+  const [maxEvidence, setMaxEvidence] = useState(5);
 
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<AnalyzeResponse | null>(null);
 
-  const [runs, setRuns] = useState<RunItem[]>([]);
+  const [runs, setRuns] = useState<RunRow[]>([]);
+  const [runsError, setRunsError] = useState<string | null>(null);
   const [runsLoading, setRunsLoading] = useState(false);
 
-  async function fetchRuns() {
-    setRunsLoading(true);
-    try {
-      const res = await fetch(`${API}/runs?limit=10`);
-      if (!res.ok) throw new Error(`Runs API error: ${res.status}`);
-      const data = await res.json();
-      setRuns(data.items ?? []);
-    } catch {
-      // ignore
-    } finally {
-      setRunsLoading(false);
-    }
-  }
+  const [openClaimIdx, setOpenClaimIdx] = useState<number | null>(0);
 
-  useEffect(() => {
-    fetchRuns();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const canAnalyze = useMemo(() => {
+    if (tab === "url") return url.trim().length > 8;
+    return text.trim().length > 10;
+  }, [tab, url, text]);
 
   async function analyze() {
     setLoading(true);
@@ -95,35 +163,36 @@ export default function Home() {
 
     try {
       const payload: any = {
-        mode,
         verifier,
-        max_claims: 6,
-        max_evidence_per_claim: 5,
-
-        // Step 11 payload
-        min_source_score: minSourceScore,
-        require_independent_domains: requireIndependent,
-        min_overlap: minOverlap,
-        max_sources_per_base_domain: maxPerBase,
-        enable_weighted_confidence: enableWeighted,
+        enable_weighted_confidence: strictPolicy,
+        max_claims: maxClaims,
+        max_evidence_per_claim: maxEvidence,
       };
+      if (tab === "url") payload.url = url.trim();
+      else payload.text = text.trim();
 
-      if (url.trim()) payload.url = url.trim();
-      if (text.trim()) payload.text = text.trim();
-
-      const res = await fetch(`${API}/analyze`, {
+      const res = await fetch(`${API_BASE}/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
-        const msg = await res.text();
-        throw new Error(`API error ${res.status}: ${msg}`);
+        const t = await res.text();
+        let detail = t;
+        try {
+          detail = JSON.parse(t)?.detail ?? t;
+        } catch {}
+        throw new Error(`API error ${res.status}: ${typeof detail === "string" ? detail : JSON.stringify(detail)}`);
       }
 
-      const data = await res.json();
-      setResult(data);
+      const json = (await res.json()) as AnalyzeResponse;
+      if (json.claims) {
+        json.claims = json.claims.map((c) => ({ ...c, evidence: sortEvidence(c.evidence || []) }));
+      }
+      setResult(json);
+      setOpenClaimIdx(0);
+
       fetchRuns();
     } catch (e: any) {
       setError(e?.message ?? "Failed to fetch");
@@ -132,299 +201,538 @@ export default function Home() {
     }
   }
 
-  async function exportRuns() {
-    const res = await fetch(`${API}/runs-export?limit=200`);
-    if (!res.ok) {
-      alert(`Export failed: ${res.status}`);
-      return;
+  async function fetchRuns() {
+    setRunsLoading(true);
+    setRunsError(null);
+
+    try {
+      const res = await fetch(`${API_BASE}/runs?limit=10`);
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`Runs API error ${res.status}: ${t}`);
+      }
+      const json = await res.json();
+      const items: RunRow[] = Array.isArray(json) ? json : (json?.items ?? []);
+      setRuns(items);
+    } catch (e: any) {
+      setRuns([]);
+      setRunsError(e?.message ?? "Could not load run history.");
+    } finally {
+      setRunsLoading(false);
     }
-    const data = await res.json();
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "fact-validator-runs.json";
-    a.click();
-    URL.revokeObjectURL(a.href);
   }
 
-  const overallLabel = result?.domain_label ?? null;
+  function exportCSV() {
+    window.open(`${API_BASE}/runs-export?limit=500&format=csv`, "_blank", "noreferrer");
+  }
+
+  function exportPDF() {
+    window.print();
+  }
+
+  useEffect(() => {
+    fetchRuns();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const examples = [
+    "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+    "https://www.bbc.com/news",
+    "https://en.wikipedia.org/wiki/Naples",
+    "https://www.who.int",
+  ];
 
   return (
-    <main className="min-h-screen p-8 max-w-6xl mx-auto">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold">Fact Validator (Working Demo)</h1>
-          <p className="text-sm text-gray-600 mt-2">
-            Step 11 enabled: credibility-weighted aggregation + independence constraints (showing adjusted verdicts).
-          </p>
-        </div>
-
-        <a className="underline text-sm mt-1" href="/source">
-          Source Credibility Checker →
-        </a>
+    <main className="min-h-screen bg-[#070A15] text-white">
+      {/* Background glow */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-24 -left-24 h-[360px] w-[360px] rounded-full blur-3xl opacity-40 bg-fuchsia-500" />
+        <div className="absolute top-24 right-0 h-[420px] w-[420px] rounded-full blur-3xl opacity-35 bg-cyan-400" />
+        <div className="absolute bottom-0 left-1/3 h-[420px] w-[420px] rounded-full blur-3xl opacity-25 bg-emerald-400" />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        {/* Input */}
-        <div className="border rounded p-4">
-          <label className="block text-sm font-medium">URL (optional)</label>
-          <input
-            className="w-full mt-2 p-2 border rounded"
-            placeholder="https://example.com/article"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-
-          <label className="block text-sm font-medium mt-4">Text (optional)</label>
-          <textarea
-            className="w-full mt-2 p-2 border rounded min-h-[140px]"
-            placeholder="Paste a claim or article text..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-
-          <div className="flex items-center gap-3 mt-4 flex-wrap">
-            <label className="text-sm font-medium">Mode</label>
-            <select className="border rounded p-2" value={mode} onChange={(e) => setMode(e.target.value as any)}>
-              <option value="live">live</option>
-              <option value="snapshot">snapshot</option>
-            </select>
-
-            <label className="text-sm font-medium ml-0 lg:ml-2">Verifier</label>
-            <select className="border rounded p-2" value={verifier} onChange={(e) => setVerifier(e.target.value as any)}>
-              <option value="baseline">baseline</option>
-              <option value="debate">debate (LLM PROVER/SKEPTIC/JUDGE)</option>
-            </select>
+      {/* Hero */}
+      <div className="relative border-b border-white/10">
+        <div className="mx-auto max-w-6xl px-4 py-10">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs text-white/80">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_18px_#34d399]" />
+            Live credibility-aware fact checking
           </div>
 
-          {/* Step 11 controls */}
-          <div className="mt-5 border rounded p-3 bg-gray-50">
-            <div className="font-medium text-sm">Step 11 Controls</div>
+          <div className="mt-5 grid lg:grid-cols-2 gap-8 items-start">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-semibold leading-tight">
+                Fact Validator
+                <span className="block text-white/70 text-lg md:text-xl mt-3">
+                  Rate sources • extract claims • retrieve evidence • produce verdicts
+                </span>
+              </h1>
 
-            <div className="mt-3 grid gap-3">
-              <div>
-                <div className="flex items-center justify-between">
-                  <label className="text-sm">Min source score: <b>{minSourceScore}</b></label>
+              <div className="mt-6 grid sm:grid-cols-3 gap-3">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-sm font-semibold">Source Credibility</div>
+                  <div className="text-xs text-white/70 mt-1">Domain score + reasons</div>
                 </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={minSourceScore}
-                  onChange={(e) => setMinSourceScore(Number(e.target.value))}
-                  className="w-full"
-                />
-                <div className="text-xs text-gray-600">Higher = stricter filtering of evidence sources.</div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-sm font-semibold">Evidence Retrieval</div>
+                  <div className="text-xs text-white/70 mt-1">SERP-based lookup</div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-sm font-semibold">Verification</div>
+                  <div className="text-xs text-white/70 mt-1">Baseline / Debate mode</div>
+                </div>
               </div>
 
+              <div className="mt-6 flex gap-2 flex-wrap">
+                <a className="text-sm px-3 py-2 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10" href="/source">
+                  Source Credibility Checker →
+                </a>
+                <a
+                  className="text-sm px-3 py-2 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10"
+                  href={`${API_BASE}/docs`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  API Docs
+                </a>
+                <button
+                  className="text-sm px-3 py-2 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10"
+                  onClick={exportPDF}
+                  disabled={!result}
+                  title="Print / Save as PDF"
+                >
+                  Export PDF
+                </button>
+              </div>
+            </div>
+
+            {/* Analyze panel */}
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_0_40px_rgba(0,0,0,0.4)]">
               <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={requireIndependent}
-                  onChange={(e) => setRequireIndependent(e.target.checked)}
-                />
-                <label className="text-sm">Require 2 independent base domains to mark SUPPORTED</label>
+                <button
+                  className={cx(
+                    "px-4 py-2 rounded-xl text-sm font-medium border transition",
+                    tab === "url" ? "bg-white text-black border-white" : "bg-white/0 border-white/15 hover:bg-white/10"
+                  )}
+                  onClick={() => setTab("url")}
+                >
+                  URL
+                </button>
+                <button
+                  className={cx(
+                    "px-4 py-2 rounded-xl text-sm font-medium border transition",
+                    tab === "text" ? "bg-white text-black border-white" : "bg-white/0 border-white/15 hover:bg-white/10"
+                  )}
+                  onClick={() => setTab("text")}
+                >
+                  Text
+                </button>
+
+                <div className="flex-1" />
+
+                <button
+                  className="text-xs px-3 py-2 rounded-xl border border-white/15 hover:bg-white/10"
+                  onClick={() => setShowAdvanced((v) => !v)}
+                >
+                  {showAdvanced ? "Hide Advanced" : "Advanced"}
+                </button>
               </div>
 
-              <div className="flex items-center gap-3 flex-wrap">
-                <label className="text-sm">Min overlap</label>
-                <input
-                  className="border rounded p-2 w-24"
-                  type="number"
-                  value={minOverlap}
-                  min={1}
-                  max={20}
-                  onChange={(e) => setMinOverlap(Number(e.target.value))}
-                />
+              <div className="mt-4 grid gap-3">
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <label className="text-xs text-white/70 flex flex-col">
+                    Evidence policy
+                    <span className="mt-1 flex items-center gap-2 bg-black/30 border border-white/15 rounded-xl px-3 py-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={strictPolicy}
+                        onChange={(e) => setStrictPolicy(e.target.checked)}
+                      />
+                      Strict (credible + independent sources)
+                    </span>
+                  </label>
 
-                <label className="text-sm">Max sources per base domain</label>
-                <input
-                  className="border rounded p-2 w-24"
-                  type="number"
-                  value={maxPerBase}
-                  min={1}
-                  max={10}
-                  onChange={(e) => setMaxPerBase(Number(e.target.value))}
-                />
-              </div>
+                  <label className="text-xs text-white/70">
+                    Verifier
+                    <select
+                      className="mt-1 w-full bg-black/30 border border-white/15 rounded-xl px-3 py-2 text-sm outline-none"
+                      value={verifier}
+                      onChange={(e) => setVerifier(e.target.value as any)}
+                    >
+                      <option value="baseline">baseline</option>
+                      <option value="debate">debate</option>
+                    </select>
+                  </label>
+                </div>
 
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={enableWeighted}
-                  onChange={(e) => setEnableWeighted(e.target.checked)}
-                />
-                <label className="text-sm">Enable credibility-weighted confidence</label>
+                {showAdvanced && (
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <label className="text-xs text-white/70">
+                      Max Claims
+                      <input
+                        type="number"
+                        min={1}
+                        max={12}
+                        className="mt-1 w-full bg-black/30 border border-white/15 rounded-xl px-3 py-2 text-sm outline-none"
+                        value={maxClaims}
+                        onChange={(e) => setMaxClaims(parseInt(e.target.value || "6", 10))}
+                      />
+                    </label>
+                    <label className="text-xs text-white/70">
+                      Max Evidence / Claim
+                      <input
+                        type="number"
+                        min={1}
+                        max={10}
+                        className="mt-1 w-full bg-black/30 border border-white/15 rounded-xl px-3 py-2 text-sm outline-none"
+                        value={maxEvidence}
+                        onChange={(e) => setMaxEvidence(parseInt(e.target.value || "5", 10))}
+                      />
+                    </label>
+                  </div>
+                )}
+
+                {tab === "url" ? (
+                  <div>
+                    <div className="text-xs text-white/70">URL</div>
+                    <input
+                      className="mt-1 w-full bg-black/30 border border-white/15 rounded-xl px-3 py-3 text-sm outline-none"
+                      placeholder="https://example.com/article"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                    />
+                    <div className="mt-2 flex gap-2 flex-wrap">
+                      {examples.map((x) => (
+                        <button
+                          key={x}
+                          className="text-xs px-3 py-1.5 rounded-full border border-white/15 hover:bg-white/10"
+                          onClick={() => setUrl(x)}
+                        >
+                          Use example
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-xs text-white/70">Text</div>
+                    <textarea
+                      className="mt-1 w-full bg-black/30 border border-white/15 rounded-xl px-3 py-3 text-sm min-h-[140px] outline-none"
+                      placeholder="Paste a claim or paragraph..."
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                    />
+                  </div>
+                )}
+
+                <button
+                  className={cx(
+                    "w-full rounded-xl px-4 py-3 text-sm font-semibold transition",
+                    !canAnalyze || loading
+                      ? "bg-white/15 text-white/50 cursor-not-allowed"
+                      : "bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-black hover:opacity-95"
+                  )}
+                  onClick={analyze}
+                  disabled={!canAnalyze || loading}
+                >
+                  {loading ? "Analyzing…" : "Analyze"}
+                </button>
+
+                {error && (
+                  <div className="rounded-xl border border-rose-300/30 bg-rose-500/10 text-rose-200 p-3 text-sm">
+                    <b>Error:</b> {error}
+                    <div className="mt-2 text-xs text-rose-200/80">
+                      If “Failed to fetch”, check backend is running at <span className="font-mono">{API_BASE}</span>.
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-
-          <button
-            className="mt-4 px-4 py-2 rounded bg-black text-white disabled:opacity-50"
-            disabled={loading || (!url.trim() && !text.trim())}
-            onClick={analyze}
-          >
-            {loading ? "Analyzing..." : "Analyze"}
-          </button>
-
-          {error && (
-            <div className="mt-4 p-3 rounded border border-red-300 bg-red-50 text-red-700">{error}</div>
-          )}
         </div>
+      </div>
 
-        {/* Result */}
-        <div className="border rounded p-4">
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <h2 className="text-lg font-semibold">Result</h2>
-            {overallLabel && (
-              <span className={`text-xs px-2 py-1 border rounded ${badgeClass(overallLabel)}`}>
-                Domain: {overallLabel} ({result.domain_score})
-              </span>
-            )}
-          </div>
-
-          {!result && <p className="text-sm text-gray-600 mt-2">No result yet.</p>}
-
-          {result && (
-            <div className="mt-4 text-sm">
-              <div><b>Input Type:</b> {result.input_type}</div>
-              <div><b>Domain:</b> {result.domain ?? "-"}</div>
-              <div><b>Domain Score:</b> {result.domain_score} ({result.domain_label})</div>
-              <div><b>Misinformation Likelihood:</b> {result.final_misinformation_likelihood}</div>
-
-              <div className="mt-3">
-                <b>Extracted Text Preview</b>
-                <div className="mt-1 p-2 border rounded bg-gray-50">{result.extracted_text_preview}</div>
+      {/* Results */}
+      <div className="relative mx-auto max-w-6xl px-4 py-8 grid gap-6">
+        {result && (
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <div className="text-xs text-white/70">Input</div>
+              <div className="mt-2 text-sm">
+                Type: <span className="font-mono">{String(result.input_type).toUpperCase()}</span>
               </div>
+              <div className="mt-1 text-sm">
+                Domain: <span className="font-mono">{result.domain ?? "—"}</span>
+              </div>
+              <div className="mt-2 text-xs text-white/50">{result.timestamp_utc ? `UTC: ${result.timestamp_utc}` : ""}</div>
+            </div>
 
-              <div className="mt-4">
-                <b>Claims</b>
-                <div className="mt-2 grid gap-3">
-                  {(result.claims ?? []).map((c: any, idx: number) => (
-                    <div key={idx} className="border rounded p-3">
-                      <div className="font-medium">{c.claim_text}</div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <div className="text-xs text-white/70">Source Credibility</div>
+              <div className="mt-3 inline-flex items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold border border-white/10 bg-white/10">
+                  {typeof result.domain_score === "number" ? result.domain_score : "—"} {result.domain_label ?? ""}
+                </span>
+              </div>
+              <div className="mt-3 text-xs text-white/60">Heuristic score — a risk signal, not ground truth.</div>
+            </div>
 
-                      <div className="mt-2 flex items-center gap-2 flex-wrap">
-                        <span className="text-xs text-gray-600">Baseline:</span>
-                        <VerdictPill v={c.verdict} c={c.confidence} />
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <div className="text-xs text-white/70">Misinformation Likelihood</div>
+              <div className="mt-2 text-3xl font-semibold">{fmtPct(result.final_misinformation_likelihood)}</div>
+              <div className="mt-3 h-2 rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className="h-2 bg-gradient-to-r from-emerald-400 via-amber-300 to-rose-400"
+                  style={{
+                    width:
+                      typeof result.final_misinformation_likelihood === "number"
+                        ? `${Math.round(Math.max(0, Math.min(1, result.final_misinformation_likelihood)) * 100)}%`
+                        : "0%",
+                  }}
+                />
+              </div>
+              <div className="mt-3 text-xs text-white/60">
+                Mean probability that a claim is false (REFUTED = confidence, SUPPORTED = 1 − confidence, NEI = 50%).
+              </div>
+            </div>
+          </div>
+        )}
 
-                        <span className="text-xs text-gray-600 ml-2">Adjusted (Step 11):</span>
-                        <VerdictPill v={c.adjusted_verdict ?? c.verdict} c={c.adjusted_confidence ?? c.confidence} />
-                      </div>
+        {result && (
+          <div className="grid lg:grid-cols-3 gap-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <div className="text-sm font-semibold">Extracted Text Preview</div>
+              <div className="mt-2 text-xs text-white/60">chars: {result.extracted_text_chars ?? "—"}</div>
+              <div className="mt-3 text-sm text-white/80 leading-relaxed">{result.extracted_text_preview ?? "—"}</div>
+            </div>
 
-                      <div className="mt-2 text-xs text-gray-700">
-                        {c.debate_summary}
-                      </div>
+            <div className="lg:col-span-2 rounded-2xl border border-white/10 bg-white/5 p-5">
+              <div className="text-sm font-semibold">Claims</div>
+              <div className="mt-2 text-xs text-white/60">Click a claim to expand evidence.</div>
+              {(result.claims ?? []).length === 0 && (
+                <div className="mt-4 rounded-xl border border-amber-300/30 bg-amber-500/10 text-amber-100 p-3 text-sm">
+                  {result.metadata?.warning ?? "No checkable claim was found in the input."} Try a full sentence stating a
+                  fact, e.g. “Paris is the capital of France.”
+                </div>
+              )}
 
-                      {/* Step 11 Evidence Summary */}
-                      {c.evidence_summary && (
-                        <div className="mt-3 p-2 border rounded bg-gray-50 text-xs">
-                          <div><b>Policy:</b> min_score={c.evidence_summary.policy?.min_source_score}, min_overlap={c.evidence_summary.policy?.min_overlap}, independent={String(c.evidence_summary.policy?.require_independent_domains)}</div>
-                          <div><b>Distinct base domains:</b> {c.evidence_summary.distinct_base_domains}</div>
-                          {Array.isArray(c.evidence_summary.strong_base_domains) && c.evidence_summary.strong_base_domains.length > 0 && (
-                            <div><b>Strong domains:</b> {c.evidence_summary.strong_base_domains.join(", ")}</div>
+              <div className="mt-4 grid gap-3">
+                {(result.claims ?? []).map((c, idx) => {
+                  const open = openClaimIdx === idx;
+                  return (
+                    <div key={idx} className="rounded-2xl border border-white/10 overflow-hidden bg-black/20">
+                      <button
+                        className="w-full text-left p-4 hover:bg-white/5 transition"
+                        onClick={() => setOpenClaimIdx(open ? null : idx)}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="text-xs text-white/60">Claim #{idx + 1}</div>
+                            <div className="mt-1 text-sm font-medium text-white">{c.claim_text}</div>
+                            <div className="mt-2 flex items-center gap-2 flex-wrap">
+                              <span className={cx("px-3 py-1 rounded-full text-xs font-semibold border", verdictClass(c.verdict))}>
+                                {(c.verdict || "NEI").toUpperCase()} • {fmtPct(c.confidence)}
+                              </span>
+                              {c.adjusted_verdict && (
+                                <span
+                                  className={cx("px-3 py-1 rounded-full text-xs font-semibold border", verdictClass(c.adjusted_verdict))}
+                                  title="Verdict under the strict evidence policy"
+                                >
+                                  Strict: {c.adjusted_verdict} • {fmtPct(c.adjusted_confidence ?? undefined)}
+                                </span>
+                              )}
+                              <span className="text-xs text-white/60">Evidence: {(c.evidence || []).length}</span>
+                              {(c.excluded_evidence || []).length > 0 && (
+                                <span className="text-xs text-white/40">
+                                  ({(c.excluded_evidence || []).length} excluded as non-independent)
+                                </span>
+                              )}
+                              {c.verdict_source && <span className="text-xs text-white/40">via {c.verdict_source}</span>}
+                            </div>
+                          </div>
+                          <div className="text-xs text-white/60">{open ? "▲" : "▼"}</div>
+                        </div>
+                      </button>
+
+                      {open && (
+                        <div className="p-4 border-t border-white/10 bg-black/10">
+                          {c.debate_summary && (
+                            <div className="text-sm text-white/80">
+                              <span className="text-white/60">Explanation:</span> {c.debate_summary}
+                            </div>
                           )}
-                          <div className="mt-1"><b>Reason:</b> {c.evidence_summary.reason}</div>
+
+                          {c.debate && !c.debate.error && (
+                            <div className="mt-4">
+                              <div className="text-sm font-semibold">Debate (Toulmin arguments)</div>
+                              <div className="mt-2 grid md:grid-cols-2 gap-2">
+                                <ArgBox title="PROVER (support)" arg={c.debate.prover} />
+                                <ArgBox title="SKEPTIC (attack)" arg={c.debate.skeptic} />
+                              </div>
+                              <div className="mt-2 text-xs text-white/60">
+                                Judge accepted: {(c.debate.accepted_arguments || []).join(", ") || "—"} · defeated:{" "}
+                                {(c.debate.defeated_arguments || []).join(", ") || "—"}
+                                {c.debate.model ? ` · model: ${c.debate.model}` : ""}
+                              </div>
+                            </div>
+                          )}
+                          {c.debate?.error && (
+                            <div className="mt-3 text-xs text-rose-200/80">Debate failed, heuristic verdict used: {c.debate.error}</div>
+                          )}
+
+                          <div className="mt-4 text-sm font-semibold">Evidence</div>
+
+                          {(c.evidence || []).length === 0 ? (
+                            <div className="mt-2 text-sm text-white/60">No evidence items returned.</div>
+                          ) : (
+                            <ul className="mt-2 grid gap-2">
+                              {sortEvidence(c.evidence || []).map((ev, j) => {
+                                const d = ev.domain ?? safeHostFromUrl(ev.url);
+                                const s = typeof ev.domain_score === "number" ? ev.domain_score : undefined;
+
+                                return (
+                                  <li key={j} className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                                    <div className="flex items-center justify-between gap-3">
+                                      <div className="min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="text-sm font-semibold truncate">{d}</span>
+                                          {typeof s === "number" && (
+                                            <span
+                                              className={cx(
+                                                "px-2 py-1 rounded-full text-xs font-semibold border",
+                                                s >= 80
+                                                  ? "bg-emerald-400/15 border-emerald-300/30 text-emerald-200"
+                                                  : s >= 50
+                                                  ? "bg-amber-400/15 border-amber-300/30 text-amber-200"
+                                                  : "bg-rose-400/15 border-rose-300/30 text-rose-200"
+                                              )}
+                                            >
+                                              {s}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+
+                                      <a
+                                        className="text-xs px-3 py-1.5 rounded-full border border-white/15 hover:bg-white/10"
+                                        href={ev.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                      >
+                                        Open
+                                      </a>
+                                    </div>
+
+                                    {ev.snippet && <div className="mt-2 text-sm text-white/80 leading-snug">{ev.snippet}</div>}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          )}
                         </div>
                       )}
-
-                      <div className="mt-3">
-                        <b>Evidence</b>
-                        <ul className="list-disc pl-6 mt-1">
-                          {(c.evidence ?? []).slice(0, 8).map((e: any, j: number) => (
-                            <li key={j} className="mt-1">
-                              <span className="font-medium">{e.domain}</span>{" "}
-                              <SourceBadge score={Number(e.domain_score ?? 50)} />{" "}
-                              <span className="text-xs text-gray-600">overlap={e.overlap}</span>{" "}
-                              —{" "}
-                              <a className="underline" href={e.url} target="_blank" rel="noreferrer">
-                                open
-                              </a>{" "}
-                              |{" "}
-                              <a className="underline" href={`/source?d=${encodeURIComponent(e.domain)}`}>
-                                check source
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <details className="mt-3">
-                        <summary className="cursor-pointer text-xs font-medium">Top sources (Step 11)</summary>
-                        <pre className="mt-2 p-2 bg-gray-100 rounded overflow-auto text-[11px]">
-                          {JSON.stringify(c.evidence_summary?.top_sources ?? [], null, 2)}
-                        </pre>
-                      </details>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
 
-              <details className="mt-4">
-                <summary className="cursor-pointer font-medium">Raw JSON</summary>
-                <pre className="mt-2 p-3 bg-gray-100 rounded overflow-auto text-xs">
-                  {JSON.stringify(result, null, 2)}
+              <details className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
+                <summary className="cursor-pointer text-sm font-semibold text-white/90">Raw JSON (debug)</summary>
+                <pre className="mt-4 text-xs overflow-auto bg-black/50 text-white rounded-xl p-4">
+{JSON.stringify(result, null, 2)}
                 </pre>
               </details>
             </div>
+          </div>
+        )}
+
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <div className="text-sm font-semibold">Run History (last 10)</div>
+              <div className="text-xs text-white/60">Stored runs for reproducibility (exportable).</div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                className="text-xs px-3 py-2 rounded-xl border border-white/15 hover:bg-white/10"
+                onClick={fetchRuns}
+                disabled={runsLoading}
+              >
+                {runsLoading ? "Refreshing…" : "Refresh"}
+              </button>
+              <button className="text-xs px-3 py-2 rounded-xl border border-white/15 hover:bg-white/10" onClick={exportCSV}>
+                Export CSV
+              </button>
+            </div>
+          </div>
+
+          {runsError ? (
+            <div className="mt-4 text-sm text-white/70">
+              <b>Run history not available.</b> {runsError}
+            </div>
+          ) : runs.length === 0 ? (
+            <div className="mt-4 text-sm text-white/70">No runs found yet.</div>
+          ) : (
+            <div className="mt-4 overflow-auto border border-white/10 rounded-xl">
+              <table className="min-w-full text-sm">
+                <thead className="bg-white/5 text-white/70">
+                  <tr>
+                    <th className="text-left font-medium px-3 py-2">ID</th>
+                    <th className="text-left font-medium px-3 py-2">Time (UTC)</th>
+                    <th className="text-left font-medium px-3 py-2">Type</th>
+                    <th className="text-left font-medium px-3 py-2">Verifier</th>
+                    <th className="text-left font-medium px-3 py-2">Domain</th>
+                    <th className="text-left font-medium px-3 py-2">Report</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {runs.map((r, i) => (
+                    <tr key={String(r.id) + "_" + i} className="border-t border-white/10">
+                      <td className="px-3 py-2">{r.id}</td>
+                      <td className="px-3 py-2 font-mono text-xs text-white/70">{r.created_utc ?? "—"}</td>
+                      <td className="px-3 py-2 text-white/80">{r.input_type ?? "—"}</td>
+                      <td className="px-3 py-2 text-white/80">{r.verifier ?? "—"}</td>
+                      <td className="px-3 py-2 text-white/80">{r.domain ?? safeHostFromUrl(r.url)}</td>
+                      <td className="px-3 py-2">
+                        <a
+                          className="text-xs px-3 py-1.5 rounded-full border border-white/15 hover:bg-white/10"
+                          href={`/run/${r.id}`}
+                        >
+                          Open report
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
-      </div>
 
-      {/* Run History */}
-      <div className="mt-8 border rounded p-4">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <h2 className="text-lg font-semibold">Run History (last 10)</h2>
-          <div className="flex gap-2">
-            <button className="px-3 py-2 border rounded" onClick={fetchRuns} disabled={runsLoading}>
-              {runsLoading ? "Refreshing..." : "Refresh"}
-            </button>
-            <button className="px-3 py-2 border rounded" onClick={exportRuns}>
-              Export JSON
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-3 overflow-auto">
-          <table className="w-full text-sm border">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left p-2 border">ID</th>
-                <th className="text-left p-2 border">Time (UTC)</th>
-                <th className="text-left p-2 border">Type</th>
-                <th className="text-left p-2 border">Domain</th>
-                <th className="text-left p-2 border">URL</th>
-              </tr>
-            </thead>
-            <tbody>
-              {runs.map((r) => (
-                <tr key={r.id}>
-                  <td className="p-2 border">{r.id}</td>
-                  <td className="p-2 border">{r.created_at_utc}</td>
-                  <td className="p-2 border">{r.input_type}</td>
-                  <td className="p-2 border">{r.domain ?? "-"}</td>
-                  <td className="p-2 border truncate max-w-[420px]">
-                    {r.url ? (
-                      <a className="underline" href={r.url} target="_blank" rel="noreferrer">
-                        {r.url}
-                      </a>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {runs.length === 0 && (
-                <tr>
-                  <td className="p-2 border" colSpan={5}>
-                    No runs yet. Click Analyze at least once.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <div className="text-xs text-white/50 text-center pb-8">
+          Credibility score is heuristic and should be interpreted as a risk signal, not ground truth.
         </div>
       </div>
+
+      {/* Print styling */}
+      <style jsx global>{`
+        @media print {
+          body {
+            background: white !important;
+            color: black !important;
+          }
+          a {
+            color: black !important;
+          }
+          button,
+          select,
+          input,
+          textarea,
+          summary {
+            display: none !important;
+          }
+        }
+      `}</style>
     </main>
   );
 }

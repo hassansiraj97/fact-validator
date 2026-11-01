@@ -1,204 +1,200 @@
+"""
+Multi-agent LLM debate verifier: PROVER vs SKEPTIC, decided by a JUDGE.
+
+Arguments follow a Toulmin-style structure (datum, warrant, claim). The Skeptic's attack is
+typed as rebuttal / undermining / undercutting (Pollock-style attack types).
+
+Variants (used for the ablation study):
+  * "full"        PROVER -> SKEPTIC -> JUDGE, structured Toulmin arguments   (proposed method)
+  * "no_skeptic"  PROVER -> JUDGE                                            (ablation: no attack)
+  * "freeform"    PROVER -> SKEPTIC -> JUDGE, unstructured free-text arguments (ablation: no Toulmin)
+"""
 from __future__ import annotations
 
-from typing import List, Dict, Any, Literal, Tuple
-import os
-import json
-import httpx
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
-Verdict = Literal["SUPPORTED", "REFUTED", "NEI"]
+from app import config, llm
+from app.evidence import (
+    LABELS_3,
+    NEI,
+    REFUTED,
+    format_evidence_for_llm,
+    label_definitions,
+    normalize_label,
+    rank_for_llm,
+)
 
+VARIANTS = ("full", "no_skeptic", "freeform")
 
-def _env_ollama_base_url() -> str:
-    return os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434").strip()
-
-
-def _env_ollama_model() -> str:
-    return os.getenv("OLLAMA_MODEL", "llama3.1:8b").strip()
-
-
-def _compact_evidence(evidence: List[Dict[str, Any]], max_items: int = 2) -> List[Dict[str, Any]]:
-    """
-    Keep evidence small and deterministic to reduce Ollama latency.
-    The caller may pass many evidence items, but we only keep top-N.
-    """
-    out: List[Dict[str, Any]] = []
-    for e in evidence[:max_items]:
-        out.append(
-            {
-                "domain": e.get("domain"),
-                "domain_score": e.get("domain_score"),
-                "snippet": (e.get("snippet") or "")[:450],
-                "url": e.get("url"),
-            }
-        )
-    return out
+SYSTEM_PROMPT = (
+    "You are part of a fact-checking debate system.\n"
+    "Use ONLY the provided evidence. Do NOT use outside knowledge and do NOT invent sources.\n"
+    "If the evidence is insufficient or ambiguous, say so.\n"
+    "Be concise."
+)
 
 
-def _safe_json_parse(s: str) -> Dict[str, Any]:
-    s = (s or "").strip()
-    if not s:
-        return {}
+def _clip_conf(x: Any, default: float = 0.55) -> float:
     try:
-        return json.loads(s)
+        v = float(x)
     except Exception:
-        pass
-
-    # If the model wrapped JSON with extra text, salvage the first {...} block.
-    start = s.find("{")
-    end = s.rfind("}")
-    if start != -1 and end != -1 and end > start:
-        try:
-            return json.loads(s[start : end + 1])
-        except Exception:
-            return {}
-    return {}
+        v = default
+    return max(0.05, min(v, 0.95))
 
 
-async def _ollama_chat(
-    messages: List[Dict[str, str]],
-    temperature: float = 0.2,
-    num_ctx: int = 1536,
-    num_predict: int = 220,
-) -> str:
-    """
-    Calls Ollama /api/chat with conservative settings to avoid timeouts.
-    - trust_env=False avoids Windows proxy env vars breaking localhost calls
-    - long read timeout accommodates slower machines
-    - num_predict limits output length (major speed-up)
-    """
-    base_url = _env_ollama_base_url()
-    model = _env_ollama_model()
+def _claim_block(claim_text: str, claim_date: Optional[str]) -> str:
+    s = f"CLAIM:\n{claim_text}\n"
+    if claim_date:
+        s += f"(claim made on: {claim_date})\n"
+    return s
 
-    payload = {
-        "model": model,
-        "messages": messages,
-        "stream": False,
-        "options": {
-            "temperature": temperature,
-            "num_ctx": num_ctx,
-            "num_predict": num_predict,
-        },
-    }
 
-    timeout = httpx.Timeout(connect=30.0, read=900.0, write=120.0, pool=120.0)
+def _prover_prompt(claim_block: str, evidence_json: str, structured: bool) -> str:
+    if structured:
+        return (
+            "Role: PROVER\n"
+            "Build the strongest argument that the CLAIM is TRUE, in Toulmin format, using ONLY the evidence.\n"
+            "If no evidence supports the claim, say so in the datum and give a low confidence.\n\n"
+            "Return a JSON object with exactly these keys:\n"
+            '{"role": "support", "datum": "<evidence fact (cite evidence id)>", '
+            '"warrant": "<why this datum supports the claim>", '
+            '"claim": "<conclusion about the original claim>", "confidence": <number between 0 and 1>}\n\n'
+            f"{claim_block}\nEVIDENCE (JSON list):\n{evidence_json}\n"
+        )
+    return (
+        "Role: PROVER\n"
+        "Write a short free-form paragraph (max 120 words) arguing that the CLAIM is TRUE, using ONLY the evidence.\n\n"
+        f"{claim_block}\nEVIDENCE (JSON list):\n{evidence_json}\n"
+    )
 
-    async with httpx.AsyncClient(timeout=timeout, trust_env=False) as client:
-        r = await client.post(f"{base_url}/api/chat", json=payload)
-        r.raise_for_status()
-        data = r.json()
-        return (data.get("message", {}) or {}).get("content", "") or ""
+
+def _skeptic_prompt(claim_block: str, evidence_json: str, prover: str, structured: bool) -> str:
+    rules = (
+        "Attack the claim through contradiction (rebuttal), weak or unreliable evidence (undermining), "
+        "or a broken inference from evidence to claim (undercutting).\n"
+        "Only attack points that are necessary to verify the claim; do not attack irrelevant details.\n"
+        "Your attack must directly weaken the original claim, not a side issue.\n"
+        "Use ONLY the evidence.\n"
+    )
+    if structured:
+        return (
+            "Role: SKEPTIC\n"
+            "Build the strongest argument AGAINST the CLAIM (or against the Prover's argument) in Toulmin format.\n"
+            + rules
+            + "\nReturn a JSON object with exactly these keys:\n"
+            '{"role": "attack", "attack_type": "rebuttal|undermining|undercutting", '
+            '"datum": "<evidence fact or missing evidence (cite evidence id)>", '
+            '"warrant": "<why this weakens the claim>", '
+            '"claim": "<refuted or not-proven conclusion>", "confidence": <number between 0 and 1>}\n\n'
+            f"{claim_block}\nPROVER ARGUMENT:\n{prover}\n\nEVIDENCE (JSON list):\n{evidence_json}\n"
+        )
+    return (
+        "Role: SKEPTIC\n"
+        "Write a short free-form paragraph (max 120 words) arguing AGAINST the CLAIM or the Prover's argument.\n"
+        + rules
+        + f"\n{claim_block}\nPROVER ARGUMENT:\n{prover}\n\nEVIDENCE (JSON list):\n{evidence_json}\n"
+    )
+
+
+def _judge_prompt(claim_block: str, evidence_json: str, prover: str, skeptic: Optional[str],
+                  labels: Sequence[str], structured: bool) -> str:
+    label_opts = "|".join(labels)
+    attack_part = f"ATTACK ARGUMENT:\n{skeptic}\n\n" if skeptic is not None else "ATTACK ARGUMENT:\n(none)\n\n"
+    formal = (
+        ', "formal_argument": {"support": {"datum": "", "warrant": "", "claim": ""}, '
+        '"attack": {"attack_type": "", "datum": "", "warrant": "", "claim": ""}}'
+        if structured else ""
+    )
+    return (
+        "Role: JUDGE\n"
+        "Decide the verdict for the CLAIM by weighing the support and attack arguments against the evidence.\n"
+        "Reject any argument that is not grounded in the evidence, targets an irrelevant detail, "
+        "or changes the meaning of the original claim.\n"
+        "Choose REFUTED only if a specific evidence item explicitly CONTRADICTS the claim (cite its id in the "
+        "summary). If the evidence is silent, off-topic, or about a different person, event or number, the "
+        "verdict is NEI: missing evidence is never a refutation.\n\n"
+        f"Verdict definitions:\n{label_definitions(labels)}\n\n"
+        "Return a JSON object with exactly these keys:\n"
+        f'{{"verdict": "{label_opts}", "confidence": <number between 0 and 1>, '
+        '"accepted_arguments": ["support" and/or "attack"], "defeated_arguments": ["support" and/or "attack"], '
+        f'"summary": "<one or two sentences>"{formal}}}\n\n'
+        f"{claim_block}\nSUPPORT ARGUMENT:\n{prover}\n\n{attack_part}EVIDENCE (JSON list):\n{evidence_json}\n"
+    )
 
 
 async def llm_debate_verdict(
     claim_text: str,
     evidence_items: List[Dict[str, Any]],
-) -> Tuple[Verdict, float, str, Dict[str, Any]]:
-    """
-    Prover vs Skeptic vs Judge debate.
-    Returns:
-      verdict, confidence, short_summary, debug_trace
-    """
-    compact = _compact_evidence(evidence_items, max_items=2)
+    *,
+    labels: Sequence[str] = LABELS_3,
+    variant: str = "full",
+    show_credibility: bool = True,
+    max_evidence: int = 3,
+    claim_date: Optional[str] = None,
+    consistency_rule: bool = True,
+) -> Tuple[str, float, str, Dict[str, Any]]:
+    """Returns (verdict, confidence, summary, debug)."""
+    if variant not in VARIANTS:
+        raise ValueError(f"Unknown debate variant '{variant}'. Use one of {VARIANTS}.")
+    structured = variant != "freeform"
 
-    system = (
-        "You are part of a fact-checking debate system.\n"
-        "You must ONLY use the provided evidence snippets.\n"
-        "If evidence is insufficient or ambiguous, choose NEI.\n"
-        "Do NOT invent sources.\n"
-        "Be concise.\n"
+    chosen = rank_for_llm(evidence_items, k=max_evidence)
+    ev_json = format_evidence_for_llm(chosen, show_credibility=show_credibility)
+    cb = _claim_block(claim_text, claim_date)
+    sys = {"role": "system", "content": SYSTEM_PROMPT}
+
+    prover = await llm.chat(
+        [sys, {"role": "user", "content": _prover_prompt(cb, ev_json, structured)}],
+        temperature=0.2, max_tokens=400, json_mode=structured, role="prover",
     )
 
-    prover = await _ollama_chat(
-        [
-            {"role": "system", "content": system},
-            {
-                "role": "user",
-                "content": (
-                    "Role: PROVER\n"
-                    "Goal: Argue the claim is SUPPORTED using ONLY evidence.\n"
-                    "Output 3-5 concise bullet points referencing evidence by (domain, domain_score).\n"
-                    "If you cannot support, write: cannot support.\n\n"
-                    f"CLAIM:\n{claim_text}\n\n"
-                    f"EVIDENCE(JSON):\n{json.dumps(compact, ensure_ascii=False, indent=2)}\n"
-                ),
-            },
-        ],
-        temperature=0.2,
-        num_ctx=1536,
-        num_predict=220,
+    skeptic: Optional[str] = None
+    if variant != "no_skeptic":
+        skeptic = await llm.chat(
+            [sys, {"role": "user", "content": _skeptic_prompt(cb, ev_json, prover, structured)}],
+            temperature=0.2, max_tokens=400, json_mode=structured, role="skeptic",
+        )
+
+    judge_raw = await llm.chat(
+        [sys, {"role": "user", "content": _judge_prompt(cb, ev_json, prover, skeptic, labels, structured)}],
+        temperature=0.1, max_tokens=550, json_mode=True, role="judge",
     )
+    j = llm.safe_json_parse(judge_raw)
 
-    skeptic = await _ollama_chat(
-        [
-            {"role": "system", "content": system},
-            {
-                "role": "user",
-                "content": (
-                    "Role: SKEPTIC\n"
-                    "Goal: Argue the claim is REFUTED or at least NOT proven using ONLY evidence.\n"
-                    "Output 3-5 concise bullet points referencing evidence by (domain, domain_score).\n"
-                    "Point out missing support, ambiguity, or weak sources.\n\n"
-                    f"CLAIM:\n{claim_text}\n\n"
-                    f"EVIDENCE(JSON):\n{json.dumps(compact, ensure_ascii=False, indent=2)}\n"
-                ),
-            },
-        ],
-        temperature=0.2,
-        num_ctx=1536,
-        num_predict=220,
-    )
+    verdict = normalize_label(j.get("verdict", NEI), labels)
+    confidence = _clip_conf(j.get("confidence", 0.55))
+    summary = str(j.get("summary") or "Insufficient evidence to decide.")
 
-    judge_prompt = (
-        "Role: JUDGE\n"
-        "Decide the verdict based ONLY on evidence.\n"
-        "Return STRICT JSON ONLY, no markdown, no extra text.\n"
-        "Schema:\n"
-        "{\n"
-        '  "verdict": "SUPPORTED|REFUTED|NEI",\n'
-        '  "confidence": 0.0-1.0,\n'
-        '  "summary": "one short sentence justification",\n'
-        '  "key_domains": ["domain1","domain2"]\n'
-        "}\n\n"
-        f"CLAIM:\n{claim_text}\n\n"
-        f"PROVER_ARGUMENT:\n{prover}\n\n"
-        f"SKEPTIC_ARGUMENT:\n{skeptic}\n\n"
-        f"EVIDENCE(JSON):\n{json.dumps(compact, ensure_ascii=False, indent=2)}\n"
-    )
-
-    judge_raw = await _ollama_chat(
-        [{"role": "system", "content": system}, {"role": "user", "content": judge_prompt}],
-        temperature=0.1,
-        num_ctx=1536,
-        num_predict=180,
-    )
-
-    j = _safe_json_parse(judge_raw)
-
-    verdict: Verdict = j.get("verdict", "NEI")
-    confidence = j.get("confidence", 0.55)
-    summary = j.get("summary", "Insufficient evidence to decide.")
-    key_domains = j.get("key_domains", [])
-
-    if verdict not in ("SUPPORTED", "REFUTED", "NEI"):
-        verdict = "NEI"
-
-    try:
-        confidence = float(confidence)
-    except Exception:
-        confidence = 0.55
-
-    confidence = max(0.05, min(confidence, 0.95))
+    # Argument-type consistency (structured variants only). In argumentation terms, an *undermining*
+    # attack (weak or missing evidence) or an *undercutting* attack (the inference fails) defeats the
+    # support argument but does not establish that the claim is false: the result is NEI. Only an
+    # accepted *rebuttal* (evidence that contradicts the claim) can justify REFUTED.
+    consistency_note = None
+    if consistency_rule and structured and verdict == REFUTED:
+        sk = llm.safe_json_parse(skeptic or "") if skeptic is not None else {}
+        attack_type = str(sk.get("attack_type") or "").strip().lower()
+        accepted = [str(a).lower() for a in (j.get("accepted_arguments") or [])]
+        if attack_type != "rebuttal" or "attack" not in accepted:
+            consistency_note = (f"REFUTED changed to NEI: the accepted attack was '{attack_type or 'none'}', "
+                                "not a rebuttal backed by contradicting evidence.")
+            verdict = NEI
+            confidence = min(confidence, 0.7)
+            summary = summary + " [Consistency rule: missing or weak evidence is not a refutation -> NEI.]"
 
     debug = {
-        "provider": "ollama",
-        "base_url": _env_ollama_base_url(),
-        "model": _env_ollama_model(),
-        "compact_evidence": compact,
-        "prover": prover[:4000],
-        "skeptic": skeptic[:4000],
+        "provider": config.LLM_PROVIDER,
+        "model": llm.model_name(),
+        "variant": variant,
+        "evidence_shown": [{k: e.get(k) for k in ("domain", "domain_score", "overlap", "url")} for e in chosen],
+        "prover_raw": prover[:4000],
+        "prover": llm.safe_json_parse(prover) if structured else prover[:4000],
+        "skeptic_raw": (skeptic or "")[:4000],
+        "skeptic": (llm.safe_json_parse(skeptic or "") if structured else (skeptic or "")[:4000]) if skeptic is not None else None,
         "judge_raw": judge_raw[:4000],
         "judge_json": j,
-        "key_domains": key_domains,
+        "formal_argument": j.get("formal_argument", {}),
+        "accepted_arguments": j.get("accepted_arguments", []),
+        "defeated_arguments": j.get("defeated_arguments", []),
+        "consistency_rule": consistency_note,
     }
-
     return verdict, confidence, summary, debug

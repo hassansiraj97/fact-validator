@@ -119,9 +119,10 @@
     "score": 70,
     "label": "MEDIUM",
     "reasons": {
-      "whitelist": "Domain appears in local reputable-source list (+20)."
+      "curated_list": "'theguardian.com' is in the curated reputable-source list (+20)."
     },
-    "ts": 1769597651
+    "ts": 1793130890,
+    "version": "3"
   },
   "cambridge.org": {
     "score": 50,
@@ -144,8 +145,11 @@
   "researchgate.net": {
     "score": 50,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1766113519
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130221,
+    "version": "2"
   },
   "wikipedia.org": {
     "score": 65,
@@ -159,17 +163,19 @@
     "score": 70,
     "label": "MEDIUM",
     "reasons": {
-      "whitelist": "Domain appears in local reputable-source list (+20)."
+      "curated_list": "'nytimes.com' is in the curated reputable-source list (+20)."
     },
-    "ts": 1769597647
+    "ts": 1793055202,
+    "version": "2"
   },
   "bbc.com": {
     "score": 80,
     "label": "HIGH",
     "reasons": {
-      "whitelist": "Domain appears in local reputable-source list (+30)."
+      "curated_list": "'bbc.com' is in the curated reputable-source list (+30)."
     },
-    "ts": 1769597653
+    "ts": 1793130890,
+    "version": "3"
   },
   "time.com": {
     "score": 50,
@@ -184,10 +190,13 @@
     "ts": 1767830129
   },
   "youtube.com": {
-    "score": 50,
-    "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1768515381
+    "score": 40,
+    "label": "LOW",
+    "reasons": {
+      "platform_risk": "Video platform: quality varies widely (-10)."
+    },
+    "ts": 1793130890,
+    "version": "3"
   },
   "albaniandailynews.com": {
     "score": 50,
@@ -198,8 +207,11 @@
   "yahoo.com": {
     "score": 50,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1768516666
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055202,
+    "version": "2"
   },
   "aol.com": {
     "score": 50,
@@ -219,13 +231,17 @@
     "reasons": {
       "platform_risk": "Social platform: high repost/misinformation risk (-20)."
     },
-    "ts": 1768520218
+    "ts": 1793130887,
+    "version": "3"
   },
   "thehill.com": {
     "score": 50,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1768521293
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
   },
   "nbcnews.com": {
     "score": 50,
@@ -236,8 +252,11 @@
   "pbs.org": {
     "score": 50,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1768521294
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130890,
+    "version": "3"
   },
   "usatoday.com": {
     "score": 50,
@@ -288,8 +307,11 @@
   "arise.tv": {
     "score": 50,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1768901331
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055200,
+    "version": "2"
   },
   "ir-ia.com": {
     "score": 50,
@@ -298,10 +320,13 @@
     "ts": 1768901331
   },
   "dw.com": {
-    "score": 50,
+    "score": 70,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1768901658
+    "reasons": {
+      "curated_list": "'dw.com' is in the curated reputable-source list (+20)."
+    },
+    "ts": 1793055200,
+    "version": "2"
   },
   "ednews.net": {
     "score": 50,
@@ -318,8 +343,11 @@
   "foxnews.com": {
     "score": 50,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1769597645
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055202,
+    "version": "2"
   },
   "elpais.com": {
     "score": 50,
@@ -342,7 +370,658 @@
   "cnn.com": {
     "score": 50,
     "label": "MEDIUM",
-    "reasons": {},
-    "ts": 1769597785
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055202,
+    "version": "2"
+  },
+  "compuserve.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055200,
+    "version": "2"
+  },
+  "reddit.com": {
+    "score": 35,
+    "label": "LOW",
+    "reasons": {
+      "platform_risk": "Forum platform: quality varies (-15)."
+    },
+    "ts": 1793130890,
+    "version": "3"
+  },
+  "dcnewsnow.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055200,
+    "version": "2"
+  },
+  "isp.netscape.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055200,
+    "version": "2"
+  },
+  "inquirer.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055200,
+    "version": "2"
+  },
+  "reuters.com": {
+    "score": 80,
+    "label": "HIGH",
+    "reasons": {
+      "curated_list": "'reuters.com' is in the curated reputable-source list (+30)."
+    },
+    "ts": 1793130890,
+    "version": "3"
+  },
+  "washingtonpost.com": {
+    "score": 70,
+    "label": "MEDIUM",
+    "reasons": {
+      "curated_list": "'washingtonpost.com' is in the curated reputable-source list (+20)."
+    },
+    "ts": 1793055202,
+    "version": "2"
+  },
+  "papers.ssrn.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055203,
+    "version": "2"
+  },
+  "cfr.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055203,
+    "version": "2"
+  },
+  "policyreview.info": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055203,
+    "version": "2"
+  },
+  "aljazeera.com": {
+    "score": 65,
+    "label": "MEDIUM",
+    "reasons": {
+      "curated_list": "'aljazeera.com' is in the curated reputable-source list (+15)."
+    },
+    "ts": 1793055203,
+    "version": "2"
+  },
+  "go.definedlearning.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "waynetimes.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "cliffsnotes.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "coursehero.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "democracyrenovator.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "kenyainsights.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "valorinternational.globo.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "ebsco.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "abc57.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793055204,
+    "version": "2"
+  },
+  "linkedin.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130211,
+    "version": "2"
+  },
+  "pubmed.ncbi.nlm.nih.gov": {
+    "score": 85,
+    "label": "HIGH",
+    "reasons": {
+      "curated_list": "'nih.gov' is in the curated reputable-source list (+35)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "absw.org.uk": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130216,
+    "version": "2"
+  },
+  "peacefmonline.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130216,
+    "version": "2"
+  },
+  "studocu.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130216,
+    "version": "2"
+  },
+  "nationalreview.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130216,
+    "version": "2"
+  },
+  "journals.library.columbia.edu": {
+    "score": 85,
+    "label": "HIGH",
+    "reasons": {
+      "tld": "Institutional domain suffix '.edu' (+35)."
+    },
+    "ts": 1793130216,
+    "version": "2"
+  },
+  "pdd.sanmartin-meta.gov.co": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130216,
+    "version": "2"
+  },
+  "research.ebsco.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130216,
+    "version": "2"
+  },
+  "quizlet.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130220,
+    "version": "2"
+  },
+  "quora.com": {
+    "score": 35,
+    "label": "LOW",
+    "reasons": {
+      "platform_risk": "Q&A platform: quality varies (-15)."
+    },
+    "ts": 1793131010,
+    "version": "3"
+  },
+  "pmc.ncbi.nlm.nih.gov": {
+    "score": 85,
+    "label": "HIGH",
+    "reasons": {
+      "curated_list": "'nih.gov' is in the curated reputable-source list (+35)."
+    },
+    "ts": 1793130220,
+    "version": "2"
+  },
+  "ajc.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130220,
+    "version": "2"
+  },
+  "news-medical.net": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130220,
+    "version": "2"
+  },
+  "medcitynews.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130220,
+    "version": "2"
+  },
+  "publicatt.unicatt.it": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130221,
+    "version": "2"
+  },
+  "newsweek.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130221,
+    "version": "2"
+  },
+  "medium.com": {
+    "score": 40,
+    "label": "LOW",
+    "reasons": {
+      "platform_risk": "Open publishing platform: quality varies (-10)."
+    },
+    "ts": 1793130221,
+    "version": "2"
+  },
+  "s3.amazonaws.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130221,
+    "version": "2"
+  },
+  "omegatechnicalsolutions.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130221,
+    "version": "2"
+  },
+  "en.wikipedia.org": {
+    "score": 65,
+    "label": "MEDIUM",
+    "reasons": {
+      "curated_list": "'wikipedia.org' is in the curated reputable-source list (+15)."
+    },
+    "ts": 1793130887,
+    "version": "3"
+  },
+  "footballhistory.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130887,
+    "version": "3"
+  },
+  "realmadrid.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130887,
+    "version": "3"
+  },
+  "statista.com": {
+    "score": 60,
+    "label": "MEDIUM",
+    "reasons": {
+      "curated_list": "'statista.com' is in the curated reputable-source list (+10)."
+    },
+    "ts": 1793130887,
+    "version": "3"
+  },
+  "music.youtube.com": {
+    "score": 40,
+    "label": "LOW",
+    "reasons": {
+      "platform_risk": "Video platform: quality varies widely (-10)."
+    },
+    "ts": 1793130890,
+    "version": "3"
+  },
+  "threads.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130890,
+    "version": "3"
+  },
+  "allfootballapp.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130890,
+    "version": "3"
+  },
+  "bloomberg.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130890,
+    "version": "3"
+  },
+  "bbc.co.uk": {
+    "score": 80,
+    "label": "HIGH",
+    "reasons": {
+      "curated_list": "'bbc.co.uk' is in the curated reputable-source list (+30)."
+    },
+    "ts": 1793130890,
+    "version": "3"
+  },
+  "tei-c.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "merriam-webster.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "oig.hhs.gov": {
+    "score": 85,
+    "label": "HIGH",
+    "reasons": {
+      "tld": "Institutional domain suffix '.gov' (+35)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "instagram.com": {
+    "score": 30,
+    "label": "LOW",
+    "reasons": {
+      "platform_risk": "Social platform: high repost/misinformation risk (-20)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "us.forums.blizzard.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "club.ministryoftesting.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "nairobibusinessmonthly.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "thisislagos.ng": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "rfi.fr": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130895,
+    "version": "3"
+  },
+  "business-standard.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130898,
+    "version": "3"
+  },
+  "m.rediff.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130898,
+    "version": "3"
+  },
+  "cia-france.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793130984,
+    "version": "3"
+  },
+  "simple.wikipedia.org": {
+    "score": 65,
+    "label": "MEDIUM",
+    "reasons": {
+      "curated_list": "'wikipedia.org' is in the curated reputable-source list (+15)."
+    },
+    "ts": 1793130984,
+    "version": "3"
+  },
+  "tiktok.com": {
+    "score": 30,
+    "label": "LOW",
+    "reasons": {
+      "platform_risk": "Social platform: high repost/misinformation risk (-20)."
+    },
+    "ts": 1793131010,
+    "version": "3"
+  },
+  "familysearch.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793131010,
+    "version": "3"
+  },
+  "ancestry.ca": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793131010,
+    "version": "3"
+  },
+  "moviefone.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793131010,
+    "version": "3"
+  },
+  "israelhayom.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793131010,
+    "version": "3"
+  },
+  "e-a-a.org": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793131031,
+    "version": "3"
+  },
+  "cntraveler.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793131031,
+    "version": "3"
+  },
+  "britannica.com": {
+    "score": 70,
+    "label": "MEDIUM",
+    "reasons": {
+      "curated_list": "'britannica.com' is in the curated reputable-source list (+20)."
+    },
+    "ts": 1793131031,
+    "version": "3"
+  },
+  "understandingitaly.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793131031,
+    "version": "3"
+  },
+  "advantour.com": {
+    "score": 50,
+    "label": "MEDIUM",
+    "reasons": {
+      "neutral": "No rule matched: neutral prior (50)."
+    },
+    "ts": 1793131031,
+    "version": "3"
   }
 }

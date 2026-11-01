@@ -1,10 +1,12 @@
 # Python
 .venv/
+venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.log
+.pytest_cache/
 
 # Node
 node_modules/
@@ -12,21 +14,24 @@ node_modules/
 out/
 dist/
 
-# Env
+# Env / secrets
 .env
 .env.*
+!.env.example
 
 # OS/Editor
 .DS_Store
 .vscode/
+.cursor/
 
-# secrets
-.env
-services/api/.env
+# Local data, caches and logs
+*.db
+services/api/data/search_cache/
+services/api/data/domain_cache.json
+services/api/logs/
 
-# secrets
-.env
-services/api/.env
-
-# local DB
-services/api/data/*.db
+# Large evaluation inputs (download separately, see services/api/README.md)
+services/api/eval/data/averitec/dev_knowledge_store/
+services/api/eval/data/fever/wiki-pages/
+# Evaluation outputs
+services/api/eval/results/
